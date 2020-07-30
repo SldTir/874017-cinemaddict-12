@@ -248,7 +248,7 @@ const createSiteShowMoreButton = () => {
     `<button class="films-list__show-more">Show more</button>`
   );
 };
- 
+
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
@@ -257,13 +257,13 @@ const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 
 render(siteHeaderElement, createsUserMenu(), `beforeend`);
-render(siteMainElement, createSiteNavigation(), 'beforeend');
+render(siteMainElement, createSiteNavigation(), `beforeend`);
 render(siteMainElement, createSiteSort(), `beforeend`);
 
 render(siteMainElement, createSiteFilmsContainer(), `beforeend`);
 const siteFilmsContainer = siteMainElement.querySelector(`.films-list__container`);
 
-for(let i = 0; i < FILM_COUNT; i++) {
+for (let i = 0; i < FILM_COUNT; i++) {
   render(siteFilmsContainer, createSiteFilm(), `beforeend`);
 }
 
