@@ -8,12 +8,12 @@ const createsUserMenu = () => {
       <p class="profile__rating">Movie Buff</p>
       <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
     </section>`
-  );  
+  );
 };
 
 const createSiteNavigation = () => {
   return (
-  `<nav class="main-navigation">
+    `<nav class="main-navigation">
      <div class="main-navigation__items">
        <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
        <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">13</span></a>
@@ -21,13 +21,13 @@ const createSiteNavigation = () => {
        <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a>
      </div>
      <a href="#stats" class="main-navigation__additional">Stats</a>
-   </nav>`   
+   </nav>`
   );
 };
 
 const createSiteSort = () => {
-  return(
-  `<ul class="sort">
+  return (
+    `<ul class="sort">
       <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
       <li><a href="#" class="sort__button">Sort by date</a></li>
       <li><a href="#" class="sort__button">Sort by rating</a></li>
@@ -36,8 +36,8 @@ const createSiteSort = () => {
 };
 
 const createSiteFilmsContainer = () => {
-  return(
-  `<section class="films">
+  return (
+    `<section class="films">
     <section class="films-list">
       <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>  
       <div class="films-list__container">
@@ -48,8 +48,8 @@ const createSiteFilmsContainer = () => {
 };
 
 const createSiteFilm = () => {
-  return(
-  `<article class="film-card">
+  return (
+    `<article class="film-card">
     <h3 class="film-card__title">The Dance of Life</h3>
     <p class="film-card__rating">8.3</p>
     <p class="film-card__info">
@@ -70,8 +70,8 @@ const createSiteFilm = () => {
 };
 
 const createSitePopup = () => {
-  return(
-  `<section class="film-details">
+  return (
+    `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="form-details__top-container">
         <div class="film-details__close">
@@ -244,11 +244,11 @@ const createSitePopup = () => {
 };
 
 const createSiteShowMoreButton = () => {
-  return(
-  `<button class="films-list__show-more">Show more</button>`
+  return (
+    `<button class="films-list__show-more">Show more</button>`
   );
 };
-  
+ 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
