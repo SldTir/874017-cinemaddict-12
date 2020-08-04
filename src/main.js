@@ -10,7 +10,6 @@ import {generateFilm} from "./mock/film.js";
 const FILM_COUNT = 5;
 
 const films = new Array(FILM_COUNT).fill().map(generateFilm);
-console.log(films);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -34,4 +33,4 @@ const siteFilmElement = siteMainElement.querySelector(`.films`);
 render(siteFilmElement, createSiteShowMoreButton(), `beforeend`);
 
 const siteFooterElement = document.querySelector(`.footer`);
-// render(siteFooterElement, createSitePopup(), `afterEnd`);
+render(siteFooterElement, createSitePopup(), `afterEnd`);
