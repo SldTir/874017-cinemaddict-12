@@ -35,11 +35,45 @@ const description = [
   `In rutrum ac purus sit amet tempus`
 ];
 
+const yearProductions = [`01 April 1995`, `04 January 1928`, `15 May 1932`, `20 February 1924`, `13 August 1936`];
+
+const runtimes = [`1h 55m`, `2h 30m`, `3h 05m`, `1h 30m`, `2h 00m`];
+
+const genres = [`Action`, `Drama`, `Horror`, `Fantasy`, `Thriller`];
+
+const directors = [`Steven Spielberg`, `David Fincher`, `James Cameron`, `Martin Scorsese`, `Christopher Nolan`];
+
+const country = [`USA`, `Denmark `, `Finland`, `Scotland `, `Belgium `];
+
+const ageRatings = [`8+`, `12+`, `16+`, `18+`, `4+`];
+
+const writers = [
+  `Anne Wigton`,
+  `Heinz Herald`,
+  `Richard Weil`,
+  `Lucas Anderson`,
+  `Jackson Thomas`,
+];
+
+const actors = [
+  `Aiden Wilson`,
+  `Benjamin Moore`,
+  `Daniel Taylor`,
+  `Elijah Smith`,
+  `James Johnson`,
+];
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
 
   return Math.floor(lower + Math.random() * (upper - lower + 1));
+};
+
+const generateRating = (a = 0, b = 1) => {
+  const lower = Math.ceil(Math.min(a, b));
+  const upper = Math.floor(Math.max(a, b));
+  const reandomRating = lower + Math.random() * (upper - lower + 1)
+  return parseFloat(reandomRating.toFixed(1));;
 };
 
 const createRandomDescription = (quantity, array) => {
@@ -93,14 +127,20 @@ const createComments = (count) => {
 export const generateFilm = () => {
   const comments = createComments(getRandomInteger(RANGE_MIN, RANGE_MAX));
   return {
+    director: directors[getRandomInteger(RANGE_MIN, directors.length - 1)],
+    writers: createRandomDescription(getRandomInteger(RANGE_MIN, 4), writers),
+    actors: createRandomDescription(getRandomInteger(RANGE_MIN, 4), actors),
+    country: country[getRandomInteger(RANGE_MIN, country.length - 1)],
     name: movieNames[getRandomInteger(RANGE_MIN, movieNames.length - 1)],
+    originalName: movieNames[getRandomInteger(RANGE_MIN, movieNames.length - 1)],
     poster: posters[getRandomInteger(RANGE_MIN, posters.length - 1)],
-    // rating,
-    // yearProduction,
-    // duration,
-    // genre,
+    rating: generateRating(RANGE_MIN, 9),
+    releaseDate: yearProductions[getRandomInteger(RANGE_MIN, yearProductions.length - 1)],
+    runtime: runtimes[getRandomInteger(RANGE_MIN, runtimes.length - 1)],
+    genre: genres[getRandomInteger(RANGE_MIN, genres.length - 1)],
     numberСomments: comments.length,
     description: createRandomDescription(getRandomInteger(RANGE_MIN, RANGE_MAX), description),
+    ageRatings: ageRatings[getRandomInteger(RANGE_MIN, ageRatings.length - 1)],
     comments,
   };
 };

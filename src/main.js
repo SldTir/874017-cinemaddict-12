@@ -33,4 +33,4 @@ const siteFilmElement = siteMainElement.querySelector(`.films`);
 render(siteFilmElement, createSiteShowMoreButton(), `beforeend`);
 
 const siteFooterElement = document.querySelector(`.footer`);
-// render(siteFooterElement, createSitePopup(), `afterEnd`);
+render(siteFooterElement, createSitePopup(), `afterEnd`);
