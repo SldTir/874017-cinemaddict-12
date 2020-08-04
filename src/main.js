@@ -5,6 +5,9 @@ import {createSiteFilmsContainer} from "./view/site-films-container.js";
 import {createSiteFilm} from "./view/site-film.js";
 import {createSitePopup} from "./view/site-popup.js";
 import {createSiteShowMoreButton} from "./view/site-show-more-button.js";
+import {generateFilm} from "./mock/film.js";
+
+console.log(generateFilm());
 
 const FILM_COUNT = 5;
 
@@ -30,4 +33,4 @@ const siteFilmElement = siteMainElement.querySelector(`.films`);
 render(siteFilmElement, createSiteShowMoreButton(), `beforeend`);
 
 const siteFooterElement = document.querySelector(`.footer`);
-render(siteFooterElement, createSitePopup(), `afterEnd`);
+// render(siteFooterElement, createSitePopup(), `afterEnd`);
