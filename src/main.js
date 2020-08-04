@@ -7,9 +7,10 @@ import {createSitePopup} from "./view/site-popup.js";
 import {createSiteShowMoreButton} from "./view/site-show-more-button.js";
 import {generateFilm} from "./mock/film.js";
 
-console.log(generateFilm());
-
 const FILM_COUNT = 5;
+
+const films = new Array(FILM_COUNT).fill().map(generateFilm);
+console.log(films);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -26,11 +27,11 @@ render(siteMainElement, createSiteFilmsContainer(), `beforeend`);
 const siteFilmsContainer = siteMainElement.querySelector(`.films-list__container`);
 
 for (let i = 0; i < FILM_COUNT; i++) {
-  render(siteFilmsContainer, createSiteFilm(), `beforeend`);
+  render(siteFilmsContainer, createSiteFilm(films[i]), `beforeend`);
 }
 
 const siteFilmElement = siteMainElement.querySelector(`.films`);
 render(siteFilmElement, createSiteShowMoreButton(), `beforeend`);
 
 const siteFooterElement = document.querySelector(`.footer`);
-render(siteFooterElement, createSitePopup(), `afterEnd`);
+// render(siteFooterElement, createSitePopup(), `afterEnd`);
