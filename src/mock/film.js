@@ -29,10 +29,10 @@ const description = [
   `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
   `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`,
   `Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
-  `Sed sed nisi sed augue convallis suscipit in sed felis`,
+  `Sed sed nisi sed augue convallis suscipit in sed felis.`,
   `Aliquam erat volutpat.`,
   `Nunc fermentum tortor ac porta dapibus.`,
-  `In rutrum ac purus sit amet tempus`
+  `In rutrum ac purus sit amet tempus.`
 ];
 
 const yearProductions = [`01 April 1995`, `04 January 1928`, `15 May 1932`, `20 February 1924`, `13 August 1936`];
@@ -137,7 +137,7 @@ export const generateFilm = () => {
     rating: generateRating(RANGE_MIN, 9),
     releaseDate: yearProductions[getRandomInteger(RANGE_MIN, yearProductions.length - 1)],
     runtime: runtimes[getRandomInteger(RANGE_MIN, runtimes.length - 1)],
-    genre: genres[getRandomInteger(RANGE_MIN, genres.length - 1)],
+    genre: createRandomDescription(getRandomInteger(RANGE_MIN, 4), genres),
     numberСomments: comments.length,
     description: createRandomDescription(getRandomInteger(RANGE_MIN, RANGE_MAX), description),
     ageRatings: ageRatings[getRandomInteger(RANGE_MIN, ageRatings.length - 1)],

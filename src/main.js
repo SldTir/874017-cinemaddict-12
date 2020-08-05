@@ -1,13 +1,13 @@
 import {createsUserMenu} from "./view/user-menu.js";
-import {createSiteNavigation} from "./view/site-navigation.js";
-import {createSiteSort} from "./view/site-sort.js";
-import {createSiteFilmsContainer} from "./view/site-films-container.js";
-import {createSiteFilm} from "./view/site-film.js";
-import {createSitePopup} from "./view/site-popup.js";
-import {createSiteShowMoreButton} from "./view/site-show-more-button.js";
+import {createSiteNavigation} from "./view/navigation.js";
+import {createSiteSort} from "./view/sort.js";
+import {createSiteFilmsContainer} from "./view/films-container.js";
+import {createSiteFilm} from "./view/film.js";
+import {createSitePopup} from "./view/popup.js";
+import {createSiteShowMoreButton} from "./view/show-more-button.js";
 import {generateFilm} from "./mock/film.js";
 
-const FILM_COUNT = 5;
+const FILM_COUNT = 15;
 
 const films = new Array(FILM_COUNT).fill().map(generateFilm);
 
@@ -33,4 +33,4 @@ const siteFilmElement = siteMainElement.querySelector(`.films`);
 render(siteFilmElement, createSiteShowMoreButton(), `beforeend`);
 
 const siteFooterElement = document.querySelector(`.footer`);
-render(siteFooterElement, createSitePopup(), `afterEnd`);
+render(siteFooterElement, createSitePopup(films[0]), `afterEnd`);

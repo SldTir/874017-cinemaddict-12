@@ -1,4 +1,4 @@
-const MAX_NUMBER_CHARACTERS = 140;
+const MAX_NUMBER_CHARACTERS = 139;
 
 const truncatesText = (text, limit) => {
   const textNumbers = text.join(` `).length;
@@ -22,7 +22,7 @@ export const createSiteFilm = (film) => {
     <p class="film-card__info">
       <span class="film-card__year">${date}</span>
       <span class="film-card__duration">${runtime}</span>
-      <span class="film-card__genre">${genre}</span>
+      <span class="film-card__genre">${genre.join(`, `)}</span>
     </p>
     <img src="./images/posters/${poster}" alt="${name}" class="film-card__poster">
     <p class="film-card__description">${briefDescription}</p>
