@@ -1,3 +1,5 @@
+import {getRandomInteger, generateRating, createRandomDescription, generateDate} from "../utils.js";
+
 const RANGE_MIN = 0;
 const RANGE_MAX = 4;
 
@@ -62,39 +64,7 @@ const actors = [
   `Elijah Smith`,
   `James Johnson`,
 ];
-const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
 
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
-
-const generateRating = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-  const reandomRating = lower + Math.random() * (upper - lower + 1);
-  return parseFloat(reandomRating.toFixed(1));
-};
-
-const createRandomDescription = (quantity, array) => {
-  const randomDescription = [];
-  const cloneDescription = array.slice();
-  for (let i = 0; i <= quantity; i++) {
-    const abc = getRandomInteger(RANGE_MIN, cloneDescription.length - 1);
-    randomDescription.push(cloneDescription[abc]);
-    cloneDescription.splice(abc, 1);
-  }
-  return randomDescription;
-};
-
-const generateDate = () => {
-  const maxDayGap = 7;
-  const daysGap = getRandomInteger(-maxDayGap, 0);
-  const currentDate = new Date();
-  currentDate.setHours(23, 59, 59, 999);
-  currentDate.setDate(currentDate.getDate() + daysGap);
-  return new Date(currentDate);
-};
 
 const createComment = () => {
   const emotions = [`angry`, `puke`, `sleeping`, `smile`];
