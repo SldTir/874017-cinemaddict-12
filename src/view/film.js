@@ -1,17 +1,18 @@
 const MAX_NUMBER_CHARACTERS = 139;
 
 const truncatesText = (text, limit) => {
-  const textNumbers = text.join(` `).length;
+  const textNumbers = text.length;
   if (textNumbers <= limit) {
     return text;
   }
-  const briefDescription = text.join(` `).slice(0, limit) + `...`;
+  const briefDescription = text.slice(0, limit) + `...`;
 
   return briefDescription;
 };
 
 export const createSiteFilm = (film) => {
   const {name, poster, rating, releaseDate, runtime, genre, description, numberСomments} = film;
+  const genreUp = genre.join(`, `);
   const date = releaseDate.split(` `)[2];
   const briefDescription = truncatesText(description, MAX_NUMBER_CHARACTERS);
 
@@ -22,7 +23,7 @@ export const createSiteFilm = (film) => {
     <p class="film-card__info">
       <span class="film-card__year">${date}</span>
       <span class="film-card__duration">${runtime}</span>
-      <span class="film-card__genre">${genre.join(`, `)}</span>
+      <span class="film-card__genre">${genreUp}</span>
     </p>
     <img src="./images/posters/${poster}" alt="${name}" class="film-card__poster">
     <p class="film-card__description">${briefDescription}</p>

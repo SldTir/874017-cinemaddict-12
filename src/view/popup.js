@@ -74,7 +74,7 @@ export const createSitePopup = (film) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Writers</td>
-                <td class="film-details__cell">${writers.join(`, `)}</td>
+                <td class="film-details__cell">${writers}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Actors</td>
@@ -98,7 +98,7 @@ export const createSitePopup = (film) => {
             </table>
   
             <p class="film-details__film-description">
-              ${description.join(` `)}
+              ${description}
             </p>
           </div>
         </div>
