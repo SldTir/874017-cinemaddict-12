@@ -127,6 +127,9 @@ const createComments = (count) => {
 export const generateFilm = () => {
   const comments = createComments(getRandomInteger(RANGE_MIN, RANGE_MAX));
   return {
+    watchlist: Boolean(getRandomInteger(0, 1)),
+    history: Boolean(getRandomInteger(0, 1)),
+    favorites: Boolean(getRandomInteger(0, 1)),
     director: directors[getRandomInteger(RANGE_MIN, directors.length - 1)],
     writers: createRandomDescription(getRandomInteger(RANGE_MIN, 4), writers),
     actors: createRandomDescription(getRandomInteger(RANGE_MIN, 4), actors),

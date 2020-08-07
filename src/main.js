@@ -19,7 +19,7 @@ const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 
 render(siteHeaderElement, createsUserMenu(), `beforeend`);
-render(siteMainElement, createSiteNavigation(), `beforeend`);
+render(siteMainElement, createSiteNavigation(films), `beforeend`);
 render(siteMainElement, createSiteSort(), `beforeend`);
 
 render(siteMainElement, createSiteFilmsContainer(), `beforeend`);
