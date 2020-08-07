@@ -31,7 +31,7 @@ for (let i = 0; i < Math.min(films.length, FILM_COUNT_PER_STEP); i++) {
 }
 
 const siteFooterElement = document.querySelector(`.footer`);
-// render(siteFooterElement, createSitePopup(films[0]), `afterEnd`);
+render(siteFooterElement, createSitePopup(films[0]), `afterEnd`);
 
 if (films.length > FILM_COUNT_PER_STEP) {
   let renderedFilmCount = FILM_COUNT_PER_STEP;
