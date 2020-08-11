@@ -1,5 +1,5 @@
 import UserMenuView from "./view/user-menu.js";
-import {createSiteNavigation} from "./view/navigation.js";
+import SiteFilter from "./view/filter.js";
 import SortView from "./view/sort.js";
 import FilmsContainerView from "./view/films-container.js";
 import {createSiteFilm} from "./view/film.js";
@@ -19,7 +19,7 @@ const siteFooterElement = document.querySelector(`.footer`);
 
 
 renderElement(siteHeaderElement, new UserMenuView().getElement(), RenderPosition.BEFOREEND);
-renderTemplate(siteMainElement, createSiteNavigation(films), `beforeend`);
+renderElement(siteMainElement, new SiteFilter(films).getElement(), RenderPosition.BEFOREEND);
 renderElement(siteMainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
 
 const filmsContainerComponent = new FilmsContainerView();
