@@ -1,4 +1,4 @@
-import {createsUserMenu} from "./view/user-menu.js";
+import UserMenuView from "./view/user-menu.js";
 import {createSiteNavigation} from "./view/navigation.js";
 import {createSiteSort} from "./view/sort.js";
 import {createSiteFilmsContainer} from "./view/films-container.js";
@@ -6,7 +6,7 @@ import {createSiteFilm} from "./view/film.js";
 import {createSitePopup} from "./view/popup.js";
 import {createSiteShowMoreButton} from "./view/show-more-button.js";
 import {generateFilm} from "./mock/film.js";
-import {renderTemplate} from "./utils.js";
+import {renderTemplate, renderElement, RenderPosition} from "./utils.js";
 
 const FILM_COUNT = 15;
 const FILM_COUNT_PER_STEP = 5;
@@ -16,7 +16,7 @@ const films = new Array(FILM_COUNT).fill().map(generateFilm);
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 
-renderTemplate(siteHeaderElement, createsUserMenu(), `beforeend`);
+renderElement(siteHeaderElement, new UserMenuView().getElement, RenderPosition.BEFOREEND);
 renderTemplate(siteMainElement, createSiteNavigation(films), `beforeend`);
 renderTemplate(siteMainElement, createSiteSort(), `beforeend`);
 
