@@ -60,8 +60,6 @@ for (let i = 0; i < Math.min(films.length, FILM_COUNT_PER_STEP); i++) {
   renderFilm(siteFilmsListContainer, films[i]);
 }
 
-// render(siteFooterElement, new PopupView(films[0]).getElement(), RenderPosition.AFTERBEGIN);
-
 if (films.length > FILM_COUNT_PER_STEP) {
   const schowMoreButtonComponent = new SchowMoreButtonView();
   let renderedFilmCount = FILM_COUNT_PER_STEP;
