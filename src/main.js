@@ -19,7 +19,31 @@ const siteFooterElement = document.querySelector(`.footer`);
 
 const renderFilm = (container, film) => {
   const filmComponent = new FilmView(film);
-  // const filmPopupComponent = new PopupView(film);
+  const filmPopupComponent = new PopupView(film);
+
+  const addFilmPopup = () => {
+    siteFooterElement.appendChild(filmPopupComponent.getElement());
+  };
+
+  const removeFilmPopup = () => {
+    filmPopupComponent.getElement().remove();
+  };
+
+  filmComponent.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, () => {
+    addFilmPopup();
+  });
+
+  filmComponent.getElement().querySelector(`.film-card__title`).addEventListener(`click`, () => {
+    addFilmPopup();
+  });
+
+  filmComponent.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, () => {
+    addFilmPopup();
+  });
+
+  filmPopupComponent.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, () => {
+    removeFilmPopup();
+  });
 
   render(container, filmComponent.getElement(), RenderPosition.BEFOREEND);
 };
@@ -36,7 +60,7 @@ for (let i = 0; i < Math.min(films.length, FILM_COUNT_PER_STEP); i++) {
   renderFilm(siteFilmsListContainer, films[i]);
 }
 
-render(siteFooterElement, new PopupView(films[0]).getElement(), RenderPosition.AFTERBEGIN);
+// render(siteFooterElement, new PopupView(films[0]).getElement(), RenderPosition.AFTERBEGIN);
 
 if (films.length > FILM_COUNT_PER_STEP) {
   const schowMoreButtonComponent = new SchowMoreButtonView();
