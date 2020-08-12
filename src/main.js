@@ -2,13 +2,13 @@ import UserMenuView from "./view/user-menu.js";
 import SiteFilter from "./view/filter.js";
 import SortView from "./view/sort.js";
 import FilmsContainerView from "./view/films-container.js";
-import Film from "./view/film.js";
-import Popup from "./view/popup.js";
+import FilmView from "./view/film.js";
+import PopupView from "./view/popup.js";
 import SchowMoreButtonView from "./view/show-more-button.js";
 import {generateFilm} from "./mock/film.js";
 import {render, RenderPosition} from "./utils.js";
 
-const FILM_COUNT = 13;
+const FILM_COUNT = 18;
 const FILM_COUNT_PER_STEP = 5;
 
 const films = new Array(FILM_COUNT).fill().map(generateFilm);
@@ -17,6 +17,12 @@ const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 const siteFooterElement = document.querySelector(`.footer`);
 
+const renderFilm = (container, film) => {
+  const filmComponent = new FilmView(film);
+  // const filmPopupComponent = new PopupView(film);
+
+  render(container, filmComponent.getElement(), RenderPosition.BEFOREEND);
+};
 
 render(siteHeaderElement, new UserMenuView().getElement(), RenderPosition.BEFOREEND);
 render(siteMainElement, new SiteFilter(films).getElement(), RenderPosition.BEFOREEND);
@@ -27,10 +33,10 @@ render(siteMainElement, filmsContainerComponent.getElement(), RenderPosition.BEF
 
 const siteFilmsListContainer = siteMainElement.querySelector(`.films-list__container`);
 for (let i = 0; i < Math.min(films.length, FILM_COUNT_PER_STEP); i++) {
-  render(siteFilmsListContainer, new Film(films[i]).getElement(), RenderPosition.BEFOREEND);
+  renderFilm(siteFilmsListContainer, films[i]);
 }
 
-render(siteFooterElement, new Popup(films[0]).getElement(), RenderPosition.AFTERBEGIN);
+render(siteFooterElement, new PopupView(films[0]).getElement(), RenderPosition.AFTERBEGIN);
 
 if (films.length > FILM_COUNT_PER_STEP) {
   const schowMoreButtonComponent = new SchowMoreButtonView();
@@ -43,7 +49,7 @@ if (films.length > FILM_COUNT_PER_STEP) {
 
     films
       .slice(renderedFilmCount, renderedFilmCount + FILM_COUNT_PER_STEP)
-      .forEach((film) => render(siteFilmsListContainer, new Film(film).getElement(), RenderPosition.BEFOREEND));
+      .forEach((film) => renderFilm(siteFilmsListContainer, film));
 
     renderedFilmCount += FILM_COUNT_PER_STEP;
 
