@@ -26,7 +26,7 @@ const renderFilm = (container, film) => {
   };
 
   const removeFilmPopup = () => {
-    filmPopupComponent.getElement().remove();
+    siteFooterElement.removeChild(filmPopupComponent.getElement());
   };
 
   filmComponent.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, () => {
