@@ -2,11 +2,11 @@ import UserMenuView from "./view/user-menu.js";
 import SiteFilter from "./view/filter.js";
 import SortView from "./view/sort.js";
 import FilmsContainerView from "./view/films-container.js";
-import {createSiteFilm} from "./view/film.js";
-import {createSitePopup} from "./view/popup.js";
+import Film from "./view/film.js";
+import Popup from "./view/popup.js";
 import SchowMoreButtonView from "./view/show-more-button.js";
 import {generateFilm} from "./mock/film.js";
-import {renderTemplate, renderElement, RenderPosition} from "./utils.js";
+import {renderElement, RenderPosition} from "./utils.js";
 
 const FILM_COUNT = 15;
 const FILM_COUNT_PER_STEP = 5;
@@ -27,10 +27,10 @@ renderElement(siteMainElement, filmsContainerComponent.getElement(), RenderPosit
 
 const siteFilmsListContainer = siteMainElement.querySelector(`.films-list__container`);
 for (let i = 0; i < Math.min(films.length, FILM_COUNT_PER_STEP); i++) {
-  renderTemplate(siteFilmsListContainer, createSiteFilm(films[i]), `beforeend`);
+  renderElement(siteFilmsListContainer, new Film(films[i]).getElement(), RenderPosition.BEFOREEND);
 }
 
-renderTemplate(siteFooterElement, createSitePopup(films[0]), `afterEnd`);
+renderElement(siteFooterElement, new Popup(films[0]).getElement(), RenderPosition.AFTERBEGIN);
 
 if (films.length > FILM_COUNT_PER_STEP) {
   const schowMoreButtonComponent = new SchowMoreButtonView();
@@ -43,7 +43,7 @@ if (films.length > FILM_COUNT_PER_STEP) {
 
     films
       .slice(renderedFilmCount, renderedFilmCount + FILM_COUNT_PER_STEP)
-      .forEach((film) => renderTemplate(siteFilmsListContainer, createSiteFilm(film), `beforeend`));
+      .forEach((film) => renderElement(siteFilmsListContainer, new Film(film).getElement(), RenderPosition.BEFOREEND));
 
     renderedFilmCount += FILM_COUNT_PER_STEP;
 
