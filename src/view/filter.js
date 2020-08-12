@@ -1,4 +1,6 @@
-export const createSiteNavigation = (films) => {
+import {createElement} from "../utils.js";
+
+const createSiteFilter = (films) => {
   const watchlist = films.filter((film) => film.watchlist === true).length;
   const history = films.filter((film) => film.history === true).length;
   const favorites = films.filter((film) => film.favorites === true).length;
@@ -15,3 +17,26 @@ export const createSiteNavigation = (films) => {
    </nav>`
   );
 };
+
+export default class Filter {
+  constructor(films) {
+    this._films = films;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSiteFilter(this._films);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

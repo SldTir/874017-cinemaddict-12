@@ -1,4 +1,4 @@
-import {convertsDate} from "../utils.js";
+import {convertsDate, createElement} from "../utils.js";
 
 const createGenresTemplate = (genre) => {
   const genreTemplate = genre.map((element) => {
@@ -39,7 +39,7 @@ const createCommentsTemplate = (comments) => {
   return commentsTemplate;
 };
 
-export const createSitePopup = (film) => {
+const createPopupTemplate = (film) => {
   const {poster, name, originalName, director, writers, actors, releaseDate, runtime, country, genre, description, rating, ageRatings, comments, numberСomments} = film;
   return (
     `<section class="film-details">
@@ -158,3 +158,27 @@ export const createSitePopup = (film) => {
   </section>`
   );
 };
+
+export default class Popup {
+  constructor(film) {
+    this._film = film;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPopupTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

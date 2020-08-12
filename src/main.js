@@ -1,56 +1,83 @@
-import {createsUserMenu} from "./view/user-menu.js";
-import {createSiteNavigation} from "./view/navigation.js";
-import {createSiteSort} from "./view/sort.js";
-import {createSiteFilmsContainer} from "./view/films-container.js";
-import {createSiteFilm} from "./view/film.js";
-import {createSitePopup} from "./view/popup.js";
-import {createSiteShowMoreButton} from "./view/show-more-button.js";
+import UserMenuView from "./view/user-menu.js";
+import SiteFilter from "./view/filter.js";
+import SortView from "./view/sort.js";
+import FilmsContainerView from "./view/films-container.js";
+import FilmView from "./view/film.js";
+import PopupView from "./view/popup.js";
+import SchowMoreButtonView from "./view/show-more-button.js";
 import {generateFilm} from "./mock/film.js";
+import {render, RenderPosition} from "./utils.js";
 
-const FILM_COUNT = 15;
+const FILM_COUNT = 18;
 const FILM_COUNT_PER_STEP = 5;
 
 const films = new Array(FILM_COUNT).fill().map(generateFilm);
 
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
-
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
+const siteFooterElement = document.querySelector(`.footer`);
 
-render(siteHeaderElement, createsUserMenu(), `beforeend`);
-render(siteMainElement, createSiteNavigation(films), `beforeend`);
-render(siteMainElement, createSiteSort(), `beforeend`);
+const renderFilm = (container, film) => {
+  const filmComponent = new FilmView(film);
+  const filmPopupComponent = new PopupView(film);
 
-render(siteMainElement, createSiteFilmsContainer(), `beforeend`);
-const siteFilmsContainer = siteMainElement.querySelector(`.films-list__container`);
+  const addFilmPopup = () => {
+    siteFooterElement.appendChild(filmPopupComponent.getElement());
+  };
 
+  const removeFilmPopup = () => {
+    siteFooterElement.removeChild(filmPopupComponent.getElement());
+  };
+
+  filmComponent.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, () => {
+    addFilmPopup();
+  });
+
+  filmComponent.getElement().querySelector(`.film-card__title`).addEventListener(`click`, () => {
+    addFilmPopup();
+  });
+
+  filmComponent.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, () => {
+    addFilmPopup();
+  });
+
+  filmPopupComponent.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, () => {
+    removeFilmPopup();
+  });
+
+  render(container, filmComponent.getElement(), RenderPosition.BEFOREEND);
+};
+
+render(siteHeaderElement, new UserMenuView().getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, new SiteFilter(films).getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
+
+const filmsContainerComponent = new FilmsContainerView();
+render(siteMainElement, filmsContainerComponent.getElement(), RenderPosition.BEFOREEND);
+
+const siteFilmsListContainer = siteMainElement.querySelector(`.films-list__container`);
 for (let i = 0; i < Math.min(films.length, FILM_COUNT_PER_STEP); i++) {
-  render(siteFilmsContainer, createSiteFilm(films[i]), `beforeend`);
+  renderFilm(siteFilmsListContainer, films[i]);
 }
 
-const siteFooterElement = document.querySelector(`.footer`);
-render(siteFooterElement, createSitePopup(films[0]), `afterEnd`);
-
 if (films.length > FILM_COUNT_PER_STEP) {
+  const schowMoreButtonComponent = new SchowMoreButtonView();
   let renderedFilmCount = FILM_COUNT_PER_STEP;
 
-  const siteFilmElement = siteMainElement.querySelector(`.films`);
-  render(siteFilmElement, createSiteShowMoreButton(), `beforeend`);
+  render(filmsContainerComponent.getElement(), schowMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
 
-  const showMoreButton = siteMainElement.querySelector(`.films-list__show-more`);
-  showMoreButton.addEventListener(`click`, (evt) => {
+  schowMoreButtonComponent.getElement().addEventListener(`click`, (evt) => {
     evt.preventDefault();
 
     films
       .slice(renderedFilmCount, renderedFilmCount + FILM_COUNT_PER_STEP)
-      .forEach((film) => render(siteFilmsContainer, createSiteFilm(film), `beforeend`));
+      .forEach((film) => renderFilm(siteFilmsListContainer, film));
 
     renderedFilmCount += FILM_COUNT_PER_STEP;
 
     if (renderedFilmCount >= films.length) {
-      showMoreButton.remove();
+      schowMoreButtonComponent.getElement().remove();
+      schowMoreButtonComponent.removeElement();
     }
   });
 }

@@ -1,3 +1,5 @@
+import {createElement} from "../utils.js";
+
 const MAX_NUMBER_CHARACTERS = 139;
 
 const truncatesText = (text, limit) => {
@@ -10,7 +12,7 @@ const truncatesText = (text, limit) => {
   return briefDescription;
 };
 
-export const createSiteFilm = (film) => {
+const createFilmTemplate = (film) => {
   const {name, poster, rating, releaseDate, runtime, genre, description, numberСomments} = film;
   const genreUp = genre.join(`, `);
   const date = releaseDate.split(` `)[2];
@@ -36,3 +38,27 @@ export const createSiteFilm = (film) => {
   </article>`
   );
 };
+
+export default class Film {
+  constructor(film) {
+    this._film = film;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
