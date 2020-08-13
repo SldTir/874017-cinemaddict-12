@@ -61,43 +61,48 @@ const renderFilm = (container, film) => {
   render(container, filmComponent, RenderPosition.BEFOREEND);
 };
 
+const renderBoard = (boardContainer, boardFilms) => {
+  const filmsContainerComponent = new FilmsContainerView();
+  render(boardContainer, filmsContainerComponent.getElement(), RenderPosition.BEFOREEND);
+
+  const siteFilmsListContainer = boardContainer.querySelector(`.films-list__container`);
+  const siteFilmList = boardContainer.querySelector(`.films-list`);
+
+  if (boardFilms.length === 0) {
+    siteFilmList.innerHTML = ``;
+    render(siteFilmList, new NoFilmView().getElement(), RenderPosition.BEFOREEND);
+    return;
+  }
+
+  boardFilms
+    .slice(0, Math.min(boardFilms.length, FILM_COUNT_PER_STEP))
+    .forEach((boardFilm) => renderFilm(siteFilmsListContainer, boardFilm));
+
+  if (boardFilms.length > FILM_COUNT_PER_STEP) {
+    let renderedFilmCount = FILM_COUNT_PER_STEP;
+
+    const showMoreButtonComponent = new ShowMoreButtonView();
+
+    render(filmsContainerComponent.getElement(), showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+
+    showMoreButtonComponent.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+
+      boardFilms
+        .slice(renderedFilmCount, renderedFilmCount + FILM_COUNT_PER_STEP)
+        .forEach((film) => renderFilm(siteFilmsListContainer, film));
+
+      renderedFilmCount += FILM_COUNT_PER_STEP;
+
+      if (renderedFilmCount >= boardFilms.length) {
+        showMoreButtonComponent.getElement().remove();
+        showMoreButtonComponent.removeElement();
+      }
+    });
+  }
+};
+
 render(siteHeaderElement, new UserMenuView().getElement(), RenderPosition.BEFOREEND);
 render(siteMainElement, new SiteFilter(films).getElement(), RenderPosition.BEFOREEND);
 render(siteMainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
-
-const filmsContainerComponent = new FilmsContainerView();
-render(siteMainElement, filmsContainerComponent.getElement(), RenderPosition.BEFOREEND);
-
-const siteFilmsListContainer = siteMainElement.querySelector(`.films-list__container`);
-
-const siteFilmList = siteMainElement.querySelector(`.films-list`);
-if (films.length === 0) {
-  siteFilmList.innerHTML = ``;
-  render(siteFilmList, new NoFilmView().getElement(), RenderPosition.BEFOREEND);
-}
-
-for (let i = 0; i < Math.min(films.length, FILM_COUNT_PER_STEP); i++) {
-  renderFilm(siteFilmsListContainer, films[i]);
-}
-
-if (films.length > FILM_COUNT_PER_STEP) {
-  const showMoreButtonComponent = new ShowMoreButtonView();
-  let renderedFilmCount = FILM_COUNT_PER_STEP;
-
-  render(filmsContainerComponent.getElement(), showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
-
-  showMoreButtonComponent.getElement().addEventListener(`click`, (evt) => {
-    evt.preventDefault();
-
-    films
-      .slice(renderedFilmCount, renderedFilmCount + FILM_COUNT_PER_STEP)
-      .forEach((film) => renderFilm(siteFilmsListContainer, film));
-
-    renderedFilmCount += FILM_COUNT_PER_STEP;
-
-    if (renderedFilmCount >= films.length) {
-      showMoreButtonComponent.getElement().remove();
-      showMoreButtonComponent.removeElement();
-    }
-  });
-}
+renderBoard(siteMainElement, films);
