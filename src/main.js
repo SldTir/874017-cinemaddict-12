@@ -5,6 +5,7 @@ import FilmsContainerView from "./view/films-container.js";
 import FilmView from "./view/film.js";
 import PopupView from "./view/popup.js";
 import ShowMoreButtonView from "./view/show-more-button.js";
+import NoFilmView from "./view/no-film.js";
 import {generateFilm} from "./mock/film.js";
 import {render, RenderPosition} from "./utils.js";
 
@@ -68,6 +69,13 @@ const filmsContainerComponent = new FilmsContainerView();
 render(siteMainElement, filmsContainerComponent.getElement(), RenderPosition.BEFOREEND);
 
 const siteFilmsListContainer = siteMainElement.querySelector(`.films-list__container`);
+
+const siteFilmList = siteMainElement.querySelector(`.films-list`);
+if (films.length === 0) {
+  siteFilmList.innerHTML = ``;
+  render(siteFilmList, new NoFilmView().getElement(), RenderPosition.BEFOREEND);
+}
+
 for (let i = 0; i < Math.min(films.length, FILM_COUNT_PER_STEP); i++) {
   renderFilm(siteFilmsListContainer, films[i]);
 }
