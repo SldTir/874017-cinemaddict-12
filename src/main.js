@@ -29,20 +29,32 @@ const renderFilm = (container, film) => {
     siteFooterElement.removeChild(filmPopupComponent);
   };
 
+  const onEscKeyDown = (evt) => {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      evt.preventDefault();
+      removeFilmPopup();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
   filmComponent.querySelector(`.film-card__poster`).addEventListener(`click`, () => {
     addFilmPopup();
+    document.addEventListener(`keydown`, onEscKeyDown);
   });
 
   filmComponent.querySelector(`.film-card__title`).addEventListener(`click`, () => {
     addFilmPopup();
+    document.addEventListener(`keydown`, onEscKeyDown);
   });
 
   filmComponent.querySelector(`.film-card__comments`).addEventListener(`click`, () => {
     addFilmPopup();
+    document.addEventListener(`keydown`, onEscKeyDown);
   });
 
   filmPopupComponent.querySelector(`.film-details__close-btn`).addEventListener(`click`, () => {
     removeFilmPopup();
+    document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
   render(container, filmComponent, RenderPosition.BEFOREEND);
