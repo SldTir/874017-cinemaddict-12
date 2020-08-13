@@ -4,7 +4,7 @@ import SortView from "./view/sort.js";
 import FilmsContainerView from "./view/films-container.js";
 import FilmView from "./view/film.js";
 import PopupView from "./view/popup.js";
-import SchowMoreButtonView from "./view/show-more-button.js";
+import ShowMoreButtonView from "./view/show-more-button.js";
 import {generateFilm} from "./mock/film.js";
 import {render, RenderPosition} from "./utils.js";
 
@@ -18,34 +18,34 @@ const siteMainElement = document.querySelector(`.main`);
 const siteFooterElement = document.querySelector(`.footer`);
 
 const renderFilm = (container, film) => {
-  const filmComponent = new FilmView(film);
-  const filmPopupComponent = new PopupView(film);
+  const filmComponent = new FilmView(film).getElement();
+  const filmPopupComponent = new PopupView(film).getElement();
 
   const addFilmPopup = () => {
-    siteFooterElement.appendChild(filmPopupComponent.getElement());
+    siteFooterElement.appendChild(filmPopupComponent);
   };
 
   const removeFilmPopup = () => {
-    siteFooterElement.removeChild(filmPopupComponent.getElement());
+    siteFooterElement.removeChild(filmPopupComponent);
   };
 
-  filmComponent.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, () => {
+  filmComponent.querySelector(`.film-card__poster`).addEventListener(`click`, () => {
     addFilmPopup();
   });
 
-  filmComponent.getElement().querySelector(`.film-card__title`).addEventListener(`click`, () => {
+  filmComponent.querySelector(`.film-card__title`).addEventListener(`click`, () => {
     addFilmPopup();
   });
 
-  filmComponent.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, () => {
+  filmComponent.querySelector(`.film-card__comments`).addEventListener(`click`, () => {
     addFilmPopup();
   });
 
-  filmPopupComponent.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, () => {
+  filmPopupComponent.querySelector(`.film-details__close-btn`).addEventListener(`click`, () => {
     removeFilmPopup();
   });
 
-  render(container, filmComponent.getElement(), RenderPosition.BEFOREEND);
+  render(container, filmComponent, RenderPosition.BEFOREEND);
 };
 
 render(siteHeaderElement, new UserMenuView().getElement(), RenderPosition.BEFOREEND);
@@ -61,12 +61,12 @@ for (let i = 0; i < Math.min(films.length, FILM_COUNT_PER_STEP); i++) {
 }
 
 if (films.length > FILM_COUNT_PER_STEP) {
-  const schowMoreButtonComponent = new SchowMoreButtonView();
+  const showMoreButtonComponent = new ShowMoreButtonView();
   let renderedFilmCount = FILM_COUNT_PER_STEP;
 
-  render(filmsContainerComponent.getElement(), schowMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+  render(filmsContainerComponent.getElement(), showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
 
-  schowMoreButtonComponent.getElement().addEventListener(`click`, (evt) => {
+  showMoreButtonComponent.getElement().addEventListener(`click`, (evt) => {
     evt.preventDefault();
 
     films
@@ -76,8 +76,8 @@ if (films.length > FILM_COUNT_PER_STEP) {
     renderedFilmCount += FILM_COUNT_PER_STEP;
 
     if (renderedFilmCount >= films.length) {
-      schowMoreButtonComponent.getElement().remove();
-      schowMoreButtonComponent.removeElement();
+      showMoreButtonComponent.getElement().remove();
+      showMoreButtonComponent.removeElement();
     }
   });
 }
