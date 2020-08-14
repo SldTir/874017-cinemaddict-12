@@ -1,4 +1,5 @@
-import {convertsDate, createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
+import {convertsDate} from "../utils.js";
 
 const createGenresTemplate = (genre) => {
   const genreTemplate = genre.map((element) => {
@@ -159,26 +160,14 @@ const createPopupTemplate = (film) => {
   );
 };
 
-export default class Popup {
+export default class Popup extends AbstractView {
   constructor(film) {
-    this._film = film;
+    super();
 
-    this._element = null;
+    this._film = film;
   }
 
   getTemplate() {
     return createPopupTemplate(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
