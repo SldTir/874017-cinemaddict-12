@@ -19,15 +19,15 @@ const siteMainElement = document.querySelector(`.main`);
 const siteFooterElement = document.querySelector(`.footer`);
 
 const renderFilm = (container, film) => {
-  const filmComponent = new FilmView(film).getElement();
-  const filmPopupComponent = new PopupView(film).getElement();
+  const filmComponent = new FilmView(film);
+  const filmPopupComponent = new PopupView(film);
 
   const addFilmPopup = () => {
-    siteFooterElement.appendChild(filmPopupComponent);
+    siteFooterElement.appendChild(filmPopupComponent.getElement());
   };
 
   const removeFilmPopup = () => {
-    siteFooterElement.removeChild(filmPopupComponent);
+    siteFooterElement.removeChild(filmPopupComponent.getElement());
   };
 
   const onEscKeyDown = (evt) => {
@@ -38,27 +38,27 @@ const renderFilm = (container, film) => {
     }
   };
 
-  filmComponent.querySelector(`.film-card__poster`).addEventListener(`click`, () => {
+  filmComponent.setPosterClickHandler(() => {
     addFilmPopup();
     document.addEventListener(`keydown`, onEscKeyDown);
   });
 
-  filmComponent.querySelector(`.film-card__title`).addEventListener(`click`, () => {
+  filmComponent.setTitleClickHandler(() => {
     addFilmPopup();
     document.addEventListener(`keydown`, onEscKeyDown);
   });
 
-  filmComponent.querySelector(`.film-card__comments`).addEventListener(`click`, () => {
+  filmComponent.setCommentsClickHandler(() => {
     addFilmPopup();
     document.addEventListener(`keydown`, onEscKeyDown);
   });
 
-  filmPopupComponent.querySelector(`.film-details__close-btn`).addEventListener(`click`, () => {
+  filmPopupComponent.setCloseClickHandler(() => {
     removeFilmPopup();
     document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
-  render(container, filmComponent, RenderPosition.BEFOREEND);
+  render(container, filmComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
 const renderBoard = (boardContainer, boardFilms) => {
@@ -85,8 +85,7 @@ const renderBoard = (boardContainer, boardFilms) => {
 
     render(filmsContainerComponent.getElement(), showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
 
-    showMoreButtonComponent.getElement().addEventListener(`click`, (evt) => {
-      evt.preventDefault();
+    showMoreButtonComponent.setClickHandler(() => {
 
       boardFilms
         .slice(renderedFilmCount, renderedFilmCount + FILM_COUNT_PER_STEP)
