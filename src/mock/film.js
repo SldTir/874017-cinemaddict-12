@@ -1,4 +1,5 @@
-import {getRandomInteger, generateRating, createRandomDescription, generateDate} from "../utils.js";
+import {generateRating, createRandomDescription, generateDate} from "../utils/film.js";
+import {getRandomInteger} from "../utils/common.js";
 
 const RANGE_MIN = 0;
 const RANGE_MAX = 4;

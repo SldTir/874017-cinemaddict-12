@@ -7,7 +7,7 @@ import PopupView from "./view/popup.js";
 import ShowMoreButtonView from "./view/show-more-button.js";
 import NoFilmView from "./view/no-film.js";
 import {generateFilm} from "./mock/film.js";
-import {render, RenderPosition} from "./utils.js";
+import {render, RenderPosition, addElement, removeElement, remove} from "./utils/render.js";
 
 const FILM_COUNT = 18;
 const FILM_COUNT_PER_STEP = 5;
@@ -23,11 +23,11 @@ const renderFilm = (container, film) => {
   const filmPopupComponent = new PopupView(film);
 
   const addFilmPopup = () => {
-    siteFooterElement.appendChild(filmPopupComponent.getElement());
+    addElement(siteFooterElement, filmPopupComponent);
   };
 
   const removeFilmPopup = () => {
-    siteFooterElement.removeChild(filmPopupComponent.getElement());
+    removeElement(filmPopupComponent);
   };
 
   const onEscKeyDown = (evt) => {
@@ -58,19 +58,19 @@ const renderFilm = (container, film) => {
     document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
-  render(container, filmComponent.getElement(), RenderPosition.BEFOREEND);
+  render(container, filmComponent, RenderPosition.BEFOREEND);
 };
 
 const renderBoard = (boardContainer, boardFilms) => {
   const filmsContainerComponent = new FilmsContainerView();
-  render(boardContainer, filmsContainerComponent.getElement(), RenderPosition.BEFOREEND);
+  render(boardContainer, filmsContainerComponent, RenderPosition.BEFOREEND);
 
   const siteFilmsListContainer = boardContainer.querySelector(`.films-list__container`);
   const siteFilmList = boardContainer.querySelector(`.films-list`);
 
   if (boardFilms.length === 0) {
     siteFilmList.innerHTML = ``;
-    render(siteFilmList, new NoFilmView().getElement(), RenderPosition.BEFOREEND);
+    render(siteFilmList, new NoFilmView(), RenderPosition.BEFOREEND);
     return;
   }
 
@@ -83,7 +83,7 @@ const renderBoard = (boardContainer, boardFilms) => {
 
     const showMoreButtonComponent = new ShowMoreButtonView();
 
-    render(filmsContainerComponent.getElement(), showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+    render(filmsContainerComponent, showMoreButtonComponent, RenderPosition.BEFOREEND);
 
     showMoreButtonComponent.setClickHandler(() => {
 
@@ -94,14 +94,13 @@ const renderBoard = (boardContainer, boardFilms) => {
       renderedFilmCount += FILM_COUNT_PER_STEP;
 
       if (renderedFilmCount >= boardFilms.length) {
-        showMoreButtonComponent.getElement().remove();
-        showMoreButtonComponent.removeElement();
+        remove(showMoreButtonComponent);
       }
     });
   }
 };
 
-render(siteHeaderElement, new UserMenuView().getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, new SiteFilter(films).getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
+render(siteHeaderElement, new UserMenuView(), RenderPosition.BEFOREEND);
+render(siteMainElement, new SiteFilter(films), RenderPosition.BEFOREEND);
+render(siteMainElement, new SortView(), RenderPosition.BEFOREEND);
 renderBoard(siteMainElement, films);

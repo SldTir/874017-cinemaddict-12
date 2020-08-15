@@ -1,5 +1,5 @@
 import AbstractView from "./abstract.js";
-import {convertsDate} from "../utils.js";
+import {convertsDate} from "../utils/film.js";
 
 const createGenresTemplate = (genre) => {
   const genreTemplate = genre.map((element) => {
