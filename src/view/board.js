@@ -12,7 +12,7 @@ const createSiteFilmsContainer = () => {
   );
 };
 
-export default class SiteFilmsContainer extends AbstractView {
+export default class BoardView extends AbstractView {
   getTemplate() {
     return createSiteFilmsContainer();
   }

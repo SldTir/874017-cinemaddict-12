@@ -1,7 +1,7 @@
 import UserMenuView from "./view/user-menu.js";
 import SiteFilter from "./view/filter.js";
 import SortView from "./view/sort.js";
-import FilmsContainerView from "./view/films-container.js";
+import BoardView from "./view/board.js";
 import FilmView from "./view/film.js";
 import PopupView from "./view/popup.js";
 import ShowMoreButtonView from "./view/show-more-button.js";
@@ -62,7 +62,7 @@ const renderFilm = (container, film) => {
 };
 
 const renderBoard = (boardContainer, boardFilms) => {
-  const filmsContainerComponent = new FilmsContainerView();
+  const filmsContainerComponent = new BoardView();
   render(boardContainer, filmsContainerComponent, RenderPosition.BEFOREEND);
 
   const siteFilmsListContainer = boardContainer.querySelector(`.films-list__container`);
