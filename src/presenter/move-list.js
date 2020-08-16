@@ -10,7 +10,7 @@ import {render, RenderPosition, addElement, removeElement, remove} from "../util
 
 const FILM_COUNT_PER_STEP = 5;
 
-export default class Board {
+export default class MoveList {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
