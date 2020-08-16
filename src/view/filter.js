@@ -18,7 +18,7 @@ const createSiteFilter = (films) => {
   );
 };
 
-export default class Filter extends AbstractView {
+export default class FilterView extends AbstractView {
   constructor(films) {
     super();
 
