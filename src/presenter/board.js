@@ -13,11 +13,15 @@ const FILM_COUNT_PER_STEP = 5;
 export default class Board {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
+    this._renderedFilmCount = FILM_COUNT_PER_STEP;
 
     this._filterComponent = new FilterView();
     this._sortComponent = new SortView();
     this._boardComponent = new BoardView();
     this._noFilmComponent = new NoFilmView();
+    this._showMoreButtonComponent = new ShowMoreButtonView();
+
+    this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
   }
 
   init(boardFilms) {
@@ -83,25 +87,21 @@ export default class Board {
     render(container, this._noFilmComponent, RenderPosition.AFTERBEGIN);
   }
 
-  _renderShowMoreButton(container) {
-    let renderedFilmCount = FILM_COUNT_PER_STEP;
+  _handleShowMoreButtonClick() {
+    const siteFilmsListContainer = this._boardContainer.querySelector(`.films-list__container`);
 
-    const showMoreButtonComponent = new ShowMoreButtonView();
+    this._renderFilms(siteFilmsListContainer, this._renderedFilmCount, this._renderedFilmCount + FILM_COUNT_PER_STEP);
 
-    render(this._boardComponent, showMoreButtonComponent, RenderPosition.BEFOREEND);
+    this._renderedFilmCount += FILM_COUNT_PER_STEP;
 
-    showMoreButtonComponent.setClickHandler(() => {
+    if (this._renderedFilmCount >= this._boardFilms.length) {
+      remove(this._showMoreButtonComponent);
+    }
+  }
 
-      this._boardFilms
-        .slice(renderedFilmCount, renderedFilmCount + FILM_COUNT_PER_STEP)
-        .forEach((film) => this._renderFilm(container, film));
-
-      renderedFilmCount += FILM_COUNT_PER_STEP;
-
-      if (renderedFilmCount >= this._boardFilms.length) {
-        remove(showMoreButtonComponent);
-      }
-    });
+  _renderShowMoreButton() {
+    render(this._boardComponent, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
+    this._showMoreButtonComponent.setClickHandler(this._handleShowMoreButtonClick);
   }
 
   _renderBoard() {
@@ -117,7 +117,7 @@ export default class Board {
     this._renderFilms(siteFilmsListContainer, 0, Math.min(this._boardFilms.length, FILM_COUNT_PER_STEP));
 
     if (this._boardFilms.length > FILM_COUNT_PER_STEP) {
-      this._renderShowMoreButton(siteFilmsListContainer);
+      this._renderShowMoreButton();
     }
   }
 }
