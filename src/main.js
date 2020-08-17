@@ -16,5 +16,4 @@ const moveListPresenter = new MoveListPresenter(siteMainElement);
 
 render(siteHeaderElement, new UserMenuView(), RenderPosition.BEFOREEND);
 render(siteMainElement, new SiteFilter(films), RenderPosition.BEFOREEND);
-render(siteMainElement, new SortView(), RenderPosition.BEFOREEND);
 moveListPresenter.init(films);

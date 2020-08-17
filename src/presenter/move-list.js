@@ -2,6 +2,7 @@ import BoardView from "../view/board.js";
 import FilmView from "../view/film.js";
 import PopupView from "../view/popup.js";
 import NoFilmView from "../view/no-film.js";
+import SortView from "../view/sort.js";
 import ShowMoreButtonView from "../view/show-more-button.js";
 import {render, RenderPosition, addElement, removeElement, remove} from "../utils/render.js";
 
@@ -15,17 +16,29 @@ export default class MoveList {
 
     this._boardComponent = new BoardView();
     this._noFilmComponent = new NoFilmView();
+    this._sortComponent = new SortView();
     this._showMoreButtonComponent = new ShowMoreButtonView();
 
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(boardFilms) {
     this._boardFilms = boardFilms.slice();
 
+    this._renderSort();
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
     this._renderBoard();
+  }
+
+  _hadleSortTypeChange(sortType) {
+
+  };
+
+  _renderSort() {
+    render(this._boardContainer, this._sortComponent, RenderPosition.BEFOREEND);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderFilm(container, film) {
