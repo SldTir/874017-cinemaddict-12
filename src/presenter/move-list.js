@@ -1,6 +1,4 @@
 import BoardView from "../view/board.js";
-import FilterView from "../view/filter.js";
-import SortView from "../view/sort.js";
 import FilmView from "../view/film.js";
 import PopupView from "../view/popup.js";
 import NoFilmView from "../view/no-film.js";
@@ -15,8 +13,6 @@ export default class MoveList {
     this._boardContainer = boardContainer;
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
 
-    this._filterComponent = new FilterView();
-    this._sortComponent = new SortView();
     this._boardComponent = new BoardView();
     this._noFilmComponent = new NoFilmView();
     this._showMoreButtonComponent = new ShowMoreButtonView();
