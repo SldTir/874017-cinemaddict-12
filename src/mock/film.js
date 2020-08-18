@@ -97,6 +97,7 @@ const createComments = (count) => {
 
 export const generateFilm = () => {
   const comments = createComments(getRandomInteger(RANGE_MIN, RANGE_MAX));
+  const releaseDate = convertDateMilliseconds(...yearProductions[getRandomInteger(RANGE_MIN, yearProductions.length - 1)].split(` `));
   return {
     watchlist: Boolean(getRandomInteger(0, 1)),
     history: Boolean(getRandomInteger(0, 1)),
@@ -109,7 +110,7 @@ export const generateFilm = () => {
     originalName: movieNames[getRandomInteger(RANGE_MIN, movieNames.length - 1)],
     poster: posters[getRandomInteger(RANGE_MIN, posters.length - 1)],
     rating: generateRating(RANGE_MIN, 9),
-    releaseDate: convertDateMilliseconds(...yearProductions[getRandomInteger(RANGE_MIN, yearProductions.length - 1)].split(` `)),
+    releaseDate,
     runtime: runtimes[getRandomInteger(RANGE_MIN, runtimes.length - 1)],
     genre: createRandomDescription(getRandomInteger(RANGE_MIN, 4), genres),
     numberСomments: comments.length,

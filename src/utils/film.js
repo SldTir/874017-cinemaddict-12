@@ -39,8 +39,7 @@ export const convertsDate = (date) => {
 };
 
 export const convertDateMilliseconds = (day, month, year) => {
-  const date = new Date(`${day}, ${month}, ${year}`).getTime();
-  return date;
+  return new Date(`${day}, ${month}, ${year}`).getTime();
 };
 
 export const convertMillisecondsDatePopup = (dateMill) => {
