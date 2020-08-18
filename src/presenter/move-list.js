@@ -1,10 +1,9 @@
 import BoardView from "../view/board.js";
-import FilmView from "../view/film.js";
-import PopupView from "../view/popup.js";
 import NoFilmView from "../view/no-film.js";
 import SortView from "../view/sort.js";
 import ShowMoreButtonView from "../view/show-more-button.js";
-import {render, RenderPosition, addElement, removeElement, remove} from "../utils/render.js";
+import FilmPresenter from "./film.js";
+import {render, RenderPosition, remove} from "../utils/render.js";
 import {sortFilmDate, sortFilmRating} from "../utils/film.js";
 import {SortType} from "../const.js";
 
@@ -66,48 +65,8 @@ export default class MoveList {
   }
 
   _renderFilm(container, film) {
-    const siteFooterElement = document.querySelector(`.footer`);
-
-    const filmComponent = new FilmView(film);
-    const filmPopupComponent = new PopupView(film);
-
-    const addFilmPopup = () => {
-      addElement(siteFooterElement, filmPopupComponent);
-    };
-
-    const removeFilmPopup = () => {
-      removeElement(filmPopupComponent);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        removeFilmPopup();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    filmComponent.setPosterClickHandler(() => {
-      addFilmPopup();
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    filmComponent.setTitleClickHandler(() => {
-      addFilmPopup();
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    filmComponent.setCommentsClickHandler(() => {
-      addFilmPopup();
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    filmPopupComponent.setCloseClickHandler(() => {
-      removeFilmPopup();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    });
-
-    render(container, filmComponent, RenderPosition.BEFOREEND);
+    const filmPresenter = new FilmPresenter(container);
+    filmPresenter.init(film);
   }
 
   _renderFilms(container, from, to) {
