@@ -5,7 +5,8 @@ import NoFilmView from "../view/no-film.js";
 import SortView from "../view/sort.js";
 import ShowMoreButtonView from "../view/show-more-button.js";
 import {render, RenderPosition, addElement, removeElement, remove} from "../utils/render.js";
-
+import {sortFilmDate, sortFilmRating} from "../utils/film.js";
+import {SortType} from "../const.js";
 
 const FILM_COUNT_PER_STEP = 5;
 
@@ -13,6 +14,7 @@ export default class MoveList {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
+    this._currentSortType = SortType.DEFAULT;
 
     this._boardComponent = new BoardView();
     this._noFilmComponent = new NoFilmView();
@@ -25,6 +27,7 @@ export default class MoveList {
 
   init(boardFilms) {
     this._boardFilms = boardFilms.slice();
+    this._sourceBoardFilms = boardFilms.slice();
 
     this._renderSort();
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
@@ -32,9 +35,28 @@ export default class MoveList {
     this._renderBoard();
   }
 
-  _hadleSortTypeChange(sortType) {
+  _sortFilms(sortType) {
+    switch (sortType) {
+      case SortType.DATE:
+        this._boardFilms.sort(sortFilmDate);
+        break;
+      case SortType.RATING:
+        this._boardFilms.sort(sortFilmRating);
+        break;
+      default:
+        this._boardFilms = this._sourceBoardFilms.slice();
+    }
 
-  };
+    this._currentSortType = sortType;
+  }
+
+  _hadleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortTasks(sortType);
+  }
 
   _renderSort() {
     render(this._boardContainer, this._sortComponent, RenderPosition.BEFOREEND);
