@@ -44,9 +44,10 @@ export const convertDateMilliseconds = (day, month, year) => {
 };
 
 export const convertMillisecondsDatePopup = (dateMill) => {
-  const day = String(dateMill.getDate()).padStart(2, `0`);
-  const year = dateMill.getFullYear();
-  const month = String(dateMill.getMonth() + 1).padStart(2, `0`);
+  const nedDate = new Date(dateMill);
+  const day = String(nedDate.getDate()).padStart(2, `0`);
+  const year = nedDate.getFullYear();
+  const month = String(nedDate.getMonth() + 1).padStart(2, `0`);
   const convertedDate = `${year}/${month}/${day}`;
   return convertedDate;
 };
@@ -73,7 +74,7 @@ export const sortFilmDate = (filmA, filmB) => {
     return weight;
   }
 
-  return filmA.releaseDate.getTime() - filmB.releaseDate.getTime();
+  return filmB.releaseDate - filmA.releaseDate;
 };
 
 export const sortFilmRating = (filmA, filmB) => {
@@ -83,5 +84,5 @@ export const sortFilmRating = (filmA, filmB) => {
     return weight;
   }
 
-  return filmB.rating.getTime() - filmA.rating.getTime();
+  return filmB.rating - filmA.rating;
 };

@@ -42,7 +42,7 @@ const createCommentsTemplate = (comments) => {
 
 const createPopupTemplate = (film) => {
   const {poster, name, originalName, director, writers, actors, releaseDate, runtime, country, genre, description, rating, ageRatings, comments, numberСomments} = film;
-  releaseDate = convertMillisecondsDatePopup(releaseDate);
+  const convertDate = convertMillisecondsDatePopup(releaseDate);
   return (
     `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -84,7 +84,7 @@ const createPopupTemplate = (film) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${releaseDate}</td>
+                <td class="film-details__cell">${convertDate}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>

@@ -50,12 +50,14 @@ export default class MoveList {
     this._currentSortType = sortType;
   }
 
-  _hadleSortTypeChange(sortType) {
+  _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
     }
 
-    this._sortTasks(sortType);
+    this._sortFilms(sortType);
+    this._clearFilmList();
+    this._renderBoard();
   }
 
   _renderSort() {
@@ -133,6 +135,12 @@ export default class MoveList {
   _renderShowMoreButton() {
     render(this._boardComponent, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
     this._showMoreButtonComponent.setClickHandler(this._handleShowMoreButtonClick);
+  }
+
+  _clearFilmList() {
+    const siteFilmsListContainer = this._boardContainer.querySelector(`.films-list__container`);
+    siteFilmsListContainer.innerHTML = ``;
+    this._renderedFilmCount = FILM_COUNT_PER_STEP;
   }
 
   _renderBoard() {

@@ -7,7 +7,6 @@ import {render, RenderPosition} from "./utils/render.js";
 const FILM_COUNT = 18;
 
 const films = new Array(FILM_COUNT).fill().map(generateFilm);
-console.log(films);
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);

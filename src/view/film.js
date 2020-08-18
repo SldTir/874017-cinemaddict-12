@@ -1,4 +1,5 @@
 import AbstractView from "./abstract.js";
+import {convertMillisecondsDatePopup} from "../utils/film.js";
 
 const MAX_NUMBER_CHARACTERS = 139;
 
@@ -14,8 +15,9 @@ const truncatesText = (text, limit) => {
 
 const createFilmTemplate = (film) => {
   const {name, poster, rating, releaseDate, runtime, genre, description, numberСomments} = film;
+  const dateConvert = convertMillisecondsDatePopup(releaseDate);
   const genreUp = genre.join(`, `);
-  const date = releaseDate.split(` `)[2];
+  const date = dateConvert.split(` `)[2];
   const briefDescription = truncatesText(description, MAX_NUMBER_CHARACTERS);
 
   return (
