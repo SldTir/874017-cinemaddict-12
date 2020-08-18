@@ -1,6 +1,5 @@
 import UserMenuView from "./view/user-menu.js";
 import SiteFilter from "./view/filter.js";
-import SortView from "./view/sort.js";
 import MoveListPresenter from "./presenter/move-list.js";
 import {generateFilm} from "./mock/film.js";
 import {render, RenderPosition} from "./utils/render.js";
@@ -16,5 +15,4 @@ const moveListPresenter = new MoveListPresenter(siteMainElement);
 
 render(siteHeaderElement, new UserMenuView(), RenderPosition.BEFOREEND);
 render(siteMainElement, new SiteFilter(films), RenderPosition.BEFOREEND);
-render(siteMainElement, new SortView(), RenderPosition.BEFOREEND);
 moveListPresenter.init(films);

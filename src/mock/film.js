@@ -1,4 +1,4 @@
-import {generateRating, createRandomDescription, generateDate} from "../utils/film.js";
+import {generateRating, createRandomDescription, generateDate, convertDateMilliseconds} from "../utils/film.js";
 import {getRandomInteger} from "../utils/common.js";
 
 const RANGE_MIN = 0;
@@ -109,7 +109,7 @@ export const generateFilm = () => {
     originalName: movieNames[getRandomInteger(RANGE_MIN, movieNames.length - 1)],
     poster: posters[getRandomInteger(RANGE_MIN, posters.length - 1)],
     rating: generateRating(RANGE_MIN, 9),
-    releaseDate: yearProductions[getRandomInteger(RANGE_MIN, yearProductions.length - 1)],
+    releaseDate: convertDateMilliseconds(...yearProductions[getRandomInteger(RANGE_MIN, yearProductions.length - 1)].split(` `)),
     runtime: runtimes[getRandomInteger(RANGE_MIN, runtimes.length - 1)],
     genre: createRandomDescription(getRandomInteger(RANGE_MIN, 4), genres),
     numberСomments: comments.length,
