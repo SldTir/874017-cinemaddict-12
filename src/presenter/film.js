@@ -1,6 +1,6 @@
 import FilmView from "../view/film.js";
 import PopupView from "../view/popup.js";
-import {render, RenderPosition, addElement, removeElement} from "../utils/render.js";
+import {render, RenderPosition, addElement, removeElement, remove} from "../utils/render.js";
 
 const siteFooterElement = document.querySelector(`.footer`);
 
@@ -21,6 +21,9 @@ export default class Film {
   init(film) {
     this._film = film;
 
+    const prevFilmComponent = this._filmComponent;
+    const prevPopupComponent = this._popupComponent;
+
     this._filmComponent = new FilmView(film);
     this._popupComponent = new PopupView(film);
 
@@ -28,8 +31,26 @@ export default class Film {
     this._filmComponent.setTitleClickHandler(this._handleTitleClick);
     this._filmComponent.setCommentsClickHandler(this._hendleCommentsClick);
     this._popupComponent.setCloseClickHandler(this._handleCloseClick);
+    if (prevFilmComponent === null || prevPopupComponent === null) {
+      render(this._filmListContainer, this._filmComponent, RenderPosition.BEFOREEND);
+      return;
+    }
 
-    render(this._filmListContainer, this._filmComponent, RenderPosition.BEFOREEND);
+    if (!siteFooterElement.getElement().contains(prevPopupComponent.getElement())) {
+      addElement(this._popupComponent);
+    }
+
+    if (siteFooterElement.getElement().contains(prevPopupComponent.getElement())) {
+      removeElement(this._popupComponent);
+    }
+
+    remove(prevFilmComponent);
+    remove(prevPopupComponent);
+  }
+
+  destroy() {
+    remove(this._filmComponent);
+    remove(this._taskEditComponent);
   }
 
   _addFilmPopup() {
