@@ -14,6 +14,7 @@ export default class MoveList {
     this._boardContainer = boardContainer;
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
     this._currentSortType = SortType.DEFAULT;
+    this._filmPresenter = {};
 
     this._boardComponent = new BoardView();
     this._noFilmComponent = new NoFilmView();
@@ -67,6 +68,7 @@ export default class MoveList {
   _renderFilm(container, film) {
     const filmPresenter = new FilmPresenter(container);
     filmPresenter.init(film);
+    this._filmPresenter[film.id] = filmPresenter;
   }
 
   _renderFilms(container, from, to) {
@@ -97,8 +99,10 @@ export default class MoveList {
   }
 
   _clearFilmList() {
-    const siteFilmsListContainer = this._boardContainer.querySelector(`.films-list__container`);
-    siteFilmsListContainer.innerHTML = ``;
+    Object
+      .values(this._filmPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._filmPresenter = {};
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
   }
 

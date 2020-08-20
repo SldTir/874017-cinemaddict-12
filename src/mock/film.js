@@ -4,6 +4,8 @@ import {getRandomInteger} from "../utils/common.js";
 const RANGE_MIN = 0;
 const RANGE_MAX = 4;
 
+const generateId = () => Date.now() + parseInt(Math.random() * 1000, 10);
+
 const movieNames = [
   `Easy Virtue`,
   `The Boat That Rocked`,
@@ -99,6 +101,7 @@ export const generateFilm = () => {
   const comments = createComments(getRandomInteger(RANGE_MIN, RANGE_MAX));
   const releaseDate = convertDateMilliseconds(...yearProductions[getRandomInteger(RANGE_MIN, yearProductions.length - 1)].split(` `));
   return {
+    id: generateId(),
     watchlist: Boolean(getRandomInteger(0, 1)),
     history: Boolean(getRandomInteger(0, 1)),
     favorites: Boolean(getRandomInteger(0, 1)),
