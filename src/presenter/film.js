@@ -1,12 +1,13 @@
 import FilmView from "../view/film.js";
 import PopupView from "../view/popup.js";
-import {render, RenderPosition, addElement, removeElement, remove} from "../utils/render.js";
+import {render, RenderPosition, addElement, removeElement, remove, replace} from "../utils/render.js";
 
 const siteFooterElement = document.querySelector(`.footer`);
 
 export default class Film {
-  constructor(filmListContainer) {
+  constructor(filmListContainer, changeData) {
     this._filmListContainer = filmListContainer;
+    this._changeData = changeData;
 
     this._filmComponent = null;
     this._popupComponent = null;
@@ -16,6 +17,9 @@ export default class Film {
     this._hendleCommentsClick = this._hendleCommentsClick.bind(this);
     this._handleCloseClick = this._handleCloseClick.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
+    this._handleWatchedClick = this._handleWatchedClick.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
   init(film) {
@@ -30,18 +34,26 @@ export default class Film {
     this._filmComponent.setPosterClickHandler(this._handlePosterClick);
     this._filmComponent.setTitleClickHandler(this._handleTitleClick);
     this._filmComponent.setCommentsClickHandler(this._hendleCommentsClick);
+    this._filmComponent.setWatchlistClickHandler(this._handleWatchlistClick);
+    this._filmComponent.setWatchedClickHandler(this._handleWatchedClick);
+    this._filmComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+
     this._popupComponent.setCloseClickHandler(this._handleCloseClick);
+    this._popupComponent.setWatchlistClickHandler(this._handleWatchlistClick);
+    this._popupComponent.setWatchedClickHandler(this._handleWatchedClick);
+    this._popupComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+
     if (prevFilmComponent === null || prevPopupComponent === null) {
       render(this._filmListContainer, this._filmComponent, RenderPosition.BEFOREEND);
       return;
     }
 
-    if (!siteFooterElement.getElement().contains(prevPopupComponent.getElement())) {
-      addElement(this._popupComponent);
+    if (!siteFooterElement.contains(prevPopupComponent.getElement())) {
+      replace(this._filmComponent, prevFilmComponent);
     }
 
-    if (siteFooterElement.getElement().contains(prevPopupComponent.getElement())) {
-      removeElement(this._popupComponent);
+    if (siteFooterElement.contains(prevPopupComponent.getElement())) {
+      replace(this._popupComponent, prevPopupComponent);
     }
 
     remove(prevFilmComponent);
@@ -84,5 +96,42 @@ export default class Film {
 
   _handleCloseClick() {
     this._removeFilmPopup();
+  }
+
+  _handleWatchlistClick() {
+    this._changeData(
+        Object.assign(
+            {},
+            this._film,
+            {
+              watchlist: !this._film.watchlist
+            }
+
+        )
+    );
+  }
+  _handleWatchedClick() {
+    this._changeData(
+        Object.assign(
+            {},
+            this._film,
+            {
+              history: !this._film.history
+            }
+
+        )
+    );
+  }
+  _handleFavoriteClick() {
+    this._changeData(
+        Object.assign(
+            {},
+            this._film,
+            {
+              favorites: !this._film.favorites
+            }
+
+        )
+    );
   }
 }
