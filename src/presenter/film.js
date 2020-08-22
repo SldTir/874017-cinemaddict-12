@@ -44,6 +44,7 @@ export default class Film {
     this._popupComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._popupComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._popupComponent.setEmojiListClickHandler();
+    this._popupComponent.setEmojiListClickEnterHandler();
 
     if (prevFilmComponent === null || prevPopupComponent === null) {
       render(this._filmListContainer, this._filmComponent, RenderPosition.BEFOREEND);

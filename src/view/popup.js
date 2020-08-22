@@ -194,6 +194,8 @@ export default class Popup extends AbstractView {
     this._watchedCickHandler = this._watchedCickHandler.bind(this);
     this._favoriteCickHandler = this._favoriteCickHandler.bind(this);
     this._emojiListClickHandler = this._emojiListClickHandler.bind(this);
+    this._emojiListClickEnter = this._emojiListClickEnter.bind(this);
+
   }
 
   getTemplate() {
@@ -256,12 +258,25 @@ export default class Popup extends AbstractView {
     emojiLabel.forEach((element) => element.addEventListener(`click`, this._emojiListClickHandler));
   }
 
-  updateFilm(update) {
-    if (!update) {
+  _emojiListClickEnter(evt) {
+    const commentInput = this.getElement().querySelector(`.film-details__comment-input`);
+    if (evt.ctrlKey === true && evt.key === `Enter`) {
+      this.updateComment({
+        description: commentInput.value
+      });
+    }
+  }
+
+  setEmojiListClickEnterHandler() {
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._emojiListClickEnter);
+  }
+
+  updateComment(upcomments) {
+    if (!upcomments) {
       return;
     }
 
-    this._film = Object.assign({}, this._film, update);
+    this._comments = Object.assign({}, this._comments, upcomments);
 
     this.updateElement();
   }
@@ -271,7 +286,7 @@ export default class Popup extends AbstractView {
     const parent = prevElement.parentElement;
     this.removeElement();
 
-    const newElement = this.getElement;
+    const newElement = this.getElement();
 
     parent.replaceChild(newElement, prevElement);
     prevElement = null;
