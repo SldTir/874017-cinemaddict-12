@@ -226,5 +226,16 @@ export default class Popup extends AbstractView {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._favoriteCickHandler);
   }
+
+  updateElement() {
+    let prevElement = this.getElement();
+    const parent = prevElement.parentElement;
+    this.removeElement();
+
+    const newElement = this.getElement;
+
+    parent.replaceChild(newElement, prevElement);
+    prevElement = null;
+  }
 }
 
