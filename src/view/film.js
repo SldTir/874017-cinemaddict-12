@@ -27,13 +27,14 @@ const createFilmCardControlsTemplate = (watchlist, history, favorites) => {
   );
 };
 
-const createFilmTemplate = (film) => {
-  const {watchlist, history, favorites, name, poster, rating, releaseDate, runtime, genre, description, numberСomments} = film;
+const createFilmTemplate = (film, comments) => {
+  const {watchlist, history, favorites, name, poster, rating, releaseDate, runtime, genre, description} = film;
   const dateConvert = convertMillisecondsDatePopup(releaseDate);
   const genreUp = genre.join(`, `);
   const date = dateConvert.split(` `)[2];
   const briefDescription = truncatesText(description, MAX_NUMBER_CHARACTERS);
   const filmCardControlsTemplate = createFilmCardControlsTemplate(watchlist, history, favorites);
+  const numberСomments = comments.comments.length;
 
   return (
     `<article class="film-card">
@@ -53,10 +54,11 @@ const createFilmTemplate = (film) => {
 };
 
 export default class Film extends AbstractView {
-  constructor(film) {
+  constructor(film, comments) {
     super();
 
     this._film = film;
+    this._comments = comments;
 
     this._posterClickHandler = this._posterClickHandler.bind(this);
     this._titleClickHandler = this._titleClickHandler.bind(this);
@@ -67,7 +69,7 @@ export default class Film extends AbstractView {
   }
 
   getTemplate() {
-    return createFilmTemplate(this._film);
+    return createFilmTemplate(this._film, this._comments);
   }
 
   _posterClickHandler(evt) {

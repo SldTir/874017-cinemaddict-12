@@ -22,14 +22,15 @@ export default class Film {
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
-  init(film) {
+  init(film, comments) {
     this._film = film;
+    this._comments = comments;
 
     const prevFilmComponent = this._filmComponent;
     const prevPopupComponent = this._popupComponent;
 
-    this._filmComponent = new FilmView(film);
-    this._popupComponent = new PopupView(film);
+    this._filmComponent = new FilmView(film, comments);
+    this._popupComponent = new PopupView(film, comments);
 
     this._filmComponent.setPosterClickHandler(this._handlePosterClick);
     this._filmComponent.setTitleClickHandler(this._handleTitleClick);
@@ -42,6 +43,7 @@ export default class Film {
     this._popupComponent.setWatchlistClickHandler(this._handleWatchlistClick);
     this._popupComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._popupComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._popupComponent.setEmojiListClickHandler();
 
     if (prevFilmComponent === null || prevPopupComponent === null) {
       render(this._filmListContainer, this._filmComponent, RenderPosition.BEFOREEND);
@@ -106,8 +108,8 @@ export default class Film {
             {
               watchlist: !this._film.watchlist
             }
-
-        )
+        ),
+        this._comments
     );
   }
   _handleWatchedClick() {
@@ -118,8 +120,8 @@ export default class Film {
             {
               history: !this._film.history
             }
-
-        )
+        ),
+        this._comments
     );
   }
   _handleFavoriteClick() {
@@ -130,8 +132,8 @@ export default class Film {
             {
               favorites: !this._film.favorites
             }
-
-        )
+        ),
+        this._comments
     );
   }
 }

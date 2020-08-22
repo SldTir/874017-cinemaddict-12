@@ -27,9 +27,12 @@ export default class MoveList {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
-  init(boardFilms) {
+  init(boardFilms, comments) {
     this._boardFilms = boardFilms.slice();
     this._sourceBoardFilms = boardFilms.slice();
+    this._comments = comments.slice();
+    this._sourceComments = comments.slice();
+
 
     this._renderSort();
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
@@ -37,10 +40,12 @@ export default class MoveList {
     this._renderBoard();
   }
 
-  _handleFilmChange(updateFilm) {
+  _handleFilmChange(updateFilm, updateComment) {
     this._boardFilms = updateItem(this._boardFilms, updateFilm);
     this._sourceBoardFilms = updateItem(this._sourceBoardFilms, updateFilm);
-    this._filmPresenter[updateFilm.id].init(updateFilm);
+    // this._comments = updateItem(this._comments, updateComment);
+    // this._sourceComments = updateItem(this._sourceComments, updateComment);
+    this._filmPresenter[updateFilm.id].init(updateFilm, updateComment);
   }
 
   _sortFilms(sortType) {
@@ -73,16 +78,16 @@ export default class MoveList {
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
-  _renderFilm(container, film) {
+  _renderFilm(container, film, comment) {
     const filmPresenter = new FilmPresenter(container, this._handleFilmChange);
-    filmPresenter.init(film);
+    filmPresenter.init(film, comment);
     this._filmPresenter[film.id] = filmPresenter;
   }
 
   _renderFilms(container, from, to) {
     this._boardFilms
     .slice(from, to)
-    .forEach((boardFilm) => this._renderFilm(container, boardFilm));
+    .forEach((boardFilm, index) => this._renderFilm(container, boardFilm, this._comments[index]));
   }
 
   _renderNoFilm(container) {

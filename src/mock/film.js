@@ -122,3 +122,12 @@ export const generateFilm = () => {
     comments,
   };
 };
+
+export const generateComment = () => {
+  const comments = createComments(getRandomInteger(RANGE_MIN, RANGE_MAX));
+  return {
+    url: ``,
+    description: `Select reaction below and write comment here`,
+    comments,
+  };
+};
