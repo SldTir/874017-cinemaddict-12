@@ -195,7 +195,7 @@ export default class Popup extends AbstractView {
     this._favoriteCickHandler = this._favoriteCickHandler.bind(this);
     this._emojiListClickHandler = this._emojiListClickHandler.bind(this);
     this._emojiListClickEnter = this._emojiListClickEnter.bind(this);
-
+    this._setInnerHandlers();
   }
 
   getTemplate() {
@@ -253,11 +253,6 @@ export default class Popup extends AbstractView {
     commentInput.placeholder = EmojiМessage[targetEmoji];
   }
 
-  setEmojiListClickHandler() {
-    const emojiLabel = this.getElement().querySelector(`.film-details__emoji-list`).querySelectorAll(`label`);
-    emojiLabel.forEach((element) => element.addEventListener(`click`, this._emojiListClickHandler));
-  }
-
   _emojiListClickEnter(evt) {
     const commentInput = this.getElement().querySelector(`.film-details__comment-input`);
     if (evt.ctrlKey === true && evt.key === `Enter`) {
@@ -265,10 +260,6 @@ export default class Popup extends AbstractView {
         description: commentInput.value
       });
     }
-  }
-
-  setEmojiListClickEnterHandler() {
-    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._emojiListClickEnter);
   }
 
   updateComment(upcomments) {
@@ -290,6 +281,23 @@ export default class Popup extends AbstractView {
 
     parent.replaceChild(newElement, prevElement);
     prevElement = null;
+
+    this.restoreHandlers();
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setCloseClickHandler(this._callback.closeClick);
+    this.setWatchlistClickHandler(this._callback.watchlistClick);
+    this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+  }
+
+  _setInnerHandlers() {
+    const emojiLabel = this.getElement().querySelector(`.film-details__emoji-list`).querySelectorAll(`label`);
+    emojiLabel.forEach((element) => element.addEventListener(`click`, this._emojiListClickHandler));
+
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._emojiListClickEnter);
   }
 }
 
