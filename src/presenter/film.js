@@ -61,7 +61,7 @@ export default class Film {
 
     if (this._mode === Mode.EDITING) {
       replace(this._filmComponent, prevFilmComponent);
-      replace(this._popupComponent, prevPopupComponent);
+      replace(this._popupComponent, prevPopupComponent); 
     }
 
     remove(prevFilmComponent);
