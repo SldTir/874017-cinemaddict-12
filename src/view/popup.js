@@ -1,6 +1,5 @@
-import AbstractView from "./abstract.js";
+import SmartView from "./smart.js";
 import {convertsDate, convertMillisecondsDatePopup} from "../utils/film.js";
-import {createElement} from "../utils/render.js";
 import {EmojiМessage} from "../const.js";
 
 const createGenresTemplate = (genre) => {
@@ -11,8 +10,9 @@ const createGenresTemplate = (genre) => {
 };
 
 const createGenreContainerTemplate = (genre) => {
+  const genreFlag = genre.length > 1 ? `Genres` : `Genre`;
   return (
-    `<td class="film-details__term">${genre.length > 1 ? `Genres` : `Genre`}</td>
+    `<td class="film-details__term">${genreFlag}</td>
     <td class="film-details__cell">
       ${createGenresTemplate(genre)}
     </td>`
@@ -61,7 +61,8 @@ const createCommentsTemplate = (comments) => {
 };
 
 const createCommentsWrapTemplate = (comments) => {
-  const description = comments.description;
+  const {description, emoji, isEmoji} = comments;
+  const emojiTemplate = isEmoji ? `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">` : ``;
   const numberСomments = comments.comments.length;
   return (`
   <section class="film-details__comments-wrap">
@@ -72,10 +73,12 @@ const createCommentsWrapTemplate = (comments) => {
     </ul>
   
     <div class="film-details__new-comment">
-      <div for="add-emoji" class="film-details__add-emoji-label"></div>
+      <div for="add-emoji" class="film-details__add-emoji-label">
+        ${emojiTemplate}
+      </div>
   
       <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="${description}" name="comment"></textarea>
+        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${description}</textarea>
       </label>
   
       <div class="film-details__emoji-list">
@@ -109,6 +112,7 @@ const createPopupTemplate = (film, comments) => {
   const convertDate = convertMillisecondsDatePopup(releaseDate);
   const filmDetailsControlsTemplate = createFilmDetailsControlsTemplate(watchlist, history, favorites);
   const commentsWraperTemplate = createCommentsWrapTemplate(comments);
+  const genresTemplate = createGenreContainerTemplate(genre);
   return (
     `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -161,7 +165,7 @@ const createPopupTemplate = (film, comments) => {
                 <td class="film-details__cell">${country}</td>
               </tr>
               <tr class="film-details__row">
-                ${createGenreContainerTemplate(genre)}
+                ${genresTemplate}
               </tr>
             </table>
   
@@ -183,23 +187,32 @@ const createPopupTemplate = (film, comments) => {
   );
 };
 
-export default class Popup extends AbstractView {
+export default class Popup extends SmartView {
   constructor(film, comments) {
     super();
-
     this._film = film;
     this._comments = comments;
+    this._data = Popup.parseCommentsToData(this._comments);
+
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._watchlistCickHandler = this._watchlistCickHandler.bind(this);
     this._watchedCickHandler = this._watchedCickHandler.bind(this);
     this._favoriteCickHandler = this._favoriteCickHandler.bind(this);
     this._emojiListClickHandler = this._emojiListClickHandler.bind(this);
-    this._emojiListClickEnter = this._emojiListClickEnter.bind(this);
+    this._textareaClickEnterHandler = this._textareaClickEnterHandler.bind(this);
+    this._textareaInputHandler = this._textareaInputHandler.bind(this);
     this._setInnerHandlers();
+    this.updateData = this.updateData.bind(this);
+  }
+
+  reset(comments) {
+    this.updateData(
+        Popup.parseCommentsToData(comments)
+    );
   }
 
   getTemplate() {
-    return createPopupTemplate(this._film, this._comments);
+    return createPopupTemplate(this._film, this._data);
   }
 
   _closeClickHandler(evt) {
@@ -245,44 +258,24 @@ export default class Popup extends AbstractView {
   _emojiListClickHandler(evt) {
     const imgContainer = this.getElement().querySelector(`.film-details__add-emoji-label`);
     const targetEmoji = evt.currentTarget.getAttribute(`for`).split(`-`)[1];
-    const imgElement = `<img src="images/emoji/${targetEmoji}.png" width="55" height="55" alt="emoji-${targetEmoji}"></img>`;
     imgContainer.innerHTML = ``;
-    imgContainer.appendChild(createElement(imgElement));
+    this.updateData({isEmoji: true, emoji: targetEmoji}, false);
     const commentInput = this.getElement().querySelector(`.film-details__comment-input`);
     commentInput.placeholder = ``;
     commentInput.placeholder = EmojiМessage[targetEmoji];
   }
 
-  _emojiListClickEnter(evt) {
-    const commentInput = this.getElement().querySelector(`.film-details__comment-input`);
+  _textareaInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      description: evt.target.value
+    }, true);
+  }
+
+  _textareaClickEnterHandler(evt) {
     if (evt.ctrlKey === true && evt.key === `Enter`) {
-      this.updateComment({
-        description: commentInput.value
-      });
+      // Тут будет реализована логика сохранения данных
     }
-  }
-
-  updateComment(upcomments) {
-    if (!upcomments) {
-      return;
-    }
-
-    this._comments = Object.assign({}, this._comments, upcomments);
-
-    this.updateElement();
-  }
-
-  updateElement() {
-    let prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.getElement();
-
-    parent.replaceChild(newElement, prevElement);
-    prevElement = null;
-
-    this.restoreHandlers();
   }
 
   restoreHandlers() {
@@ -297,7 +290,18 @@ export default class Popup extends AbstractView {
     const emojiLabel = this.getElement().querySelector(`.film-details__emoji-list`).querySelectorAll(`label`);
     emojiLabel.forEach((element) => element.addEventListener(`click`, this._emojiListClickHandler));
 
-    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._emojiListClickEnter);
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._textareaClickEnterHandler);
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`input`, this._textareaInputHandler);
+  }
+
+  static parseCommentsToData(comments) {
+    return Object.assign(
+        {},
+        comments,
+        {
+          isEmoji: comments.emoji !== null,
+        }
+    );
   }
 }
 

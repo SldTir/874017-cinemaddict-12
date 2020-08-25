@@ -68,11 +68,11 @@ const actors = [
   `James Johnson`,
 ];
 
+export const authors = [`Liam Smith`, `Noah Johnson`, `William Williams`, `James Jones`, `Oliver Brown`];
 
 const createComment = () => {
   const emotions = [`angry`, `puke`, `sleeping`, `smile`];
   const date = generateDate();
-  const authors = [`Liam Smith`, `Noah Johnson`, `William Williams`, `James Jones`, `Oliver Brown`];
   const messages = [
     `Interesting setting and a good cast`,
     `Booooooooooring`,
@@ -127,7 +127,8 @@ export const generateComment = () => {
   const comments = createComments(getRandomInteger(RANGE_MIN, RANGE_MAX));
   return {
     url: ``,
-    description: `Select reaction below and write comment here`,
+    emoji: null,
+    description: ``,
     comments,
   };
 };

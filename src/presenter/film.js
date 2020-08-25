@@ -2,15 +2,21 @@ import FilmView from "../view/film.js";
 import PopupView from "../view/popup.js";
 import {render, RenderPosition, addElement, removeElement, remove, replace} from "../utils/render.js";
 
+const Mode = {
+  DEFAULT: `DEFAULT`,
+  EDITING: `EDITING`,
+};
 const siteFooterElement = document.querySelector(`.footer`);
 
 export default class Film {
-  constructor(filmListContainer, changeData) {
+  constructor(filmListContainer, changeData, changeMode) {
     this._filmListContainer = filmListContainer;
     this._changeData = changeData;
+    this._changeMode = changeMode;
 
     this._filmComponent = null;
     this._popupComponent = null;
+    this._mode = Mode.DEFAULT;
 
     this._handlePosterClick = this._handlePosterClick.bind(this);
     this._handleTitleClick = this._handleTitleClick.bind(this);
@@ -49,11 +55,11 @@ export default class Film {
       return;
     }
 
-    if (!siteFooterElement.contains(prevPopupComponent.getElement())) {
+    if (this._mode === Mode.DEFAULT) {
       replace(this._filmComponent, prevFilmComponent);
     }
 
-    if (siteFooterElement.contains(prevPopupComponent.getElement())) {
+    if (this._mode !== Mode.DEFAULT) {
       replace(this._popupComponent, prevPopupComponent);
     }
 
@@ -69,16 +75,26 @@ export default class Film {
   _addFilmPopup() {
     addElement(siteFooterElement, this._popupComponent);
     document.addEventListener(`keydown`, this._onEscKeyDown);
+    this._changeMode();
+    this._mode = Mode.EDITING;
+  }
+
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._removeFilmPopup();
+    }
   }
 
   _removeFilmPopup() {
     removeElement(this._popupComponent);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
+    this._mode = Mode.DEFAULT;
   }
 
   _onEscKeyDown(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
+      this._popupComponent.reset(this._comments);
       this._removeFilmPopup();
     }
   }
@@ -96,6 +112,7 @@ export default class Film {
   }
 
   _handleCloseClick() {
+    this._popupComponent.reset(this._comments);
     this._removeFilmPopup();
   }
 

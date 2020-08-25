@@ -23,6 +23,7 @@ export default class MoveList {
     this._showMoreButtonComponent = new ShowMoreButtonView();
 
     this._handleFilmChange = this._handleFilmChange.bind(this);
+    this._handleModelChange = this._handleModelChange.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
@@ -31,8 +32,6 @@ export default class MoveList {
     this._boardFilms = boardFilms.slice();
     this._sourceBoardFilms = boardFilms.slice();
     this._comments = comments.slice();
-    this._sourceComments = comments.slice();
-
 
     this._renderSort();
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
@@ -40,11 +39,15 @@ export default class MoveList {
     this._renderBoard();
   }
 
+  _handleModelChange() {
+    Object
+      .values(this._filmPresenter)
+      .forEach((presenter) => presenter.resetView());
+  }
+
   _handleFilmChange(updateFilm, updateComment) {
     this._boardFilms = updateItem(this._boardFilms, updateFilm);
     this._sourceBoardFilms = updateItem(this._sourceBoardFilms, updateFilm);
-    // this._comments = updateItem(this._comments, updateComment);
-    // this._sourceComments = updateItem(this._sourceComments, updateComment);
     this._filmPresenter[updateFilm.id].init(updateFilm, updateComment);
   }
 
@@ -79,7 +82,7 @@ export default class MoveList {
   }
 
   _renderFilm(container, film, comment) {
-    const filmPresenter = new FilmPresenter(container, this._handleFilmChange);
+    const filmPresenter = new FilmPresenter(container, this._handleFilmChange, this._handleModelChange);
     filmPresenter.init(film, comment);
     this._filmPresenter[film.id] = filmPresenter;
   }
