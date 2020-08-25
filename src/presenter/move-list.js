@@ -1,10 +1,10 @@
 import BoardView from "../view/board.js";
-import FilmView from "../view/film.js";
-import PopupView from "../view/popup.js";
 import NoFilmView from "../view/no-film.js";
 import SortView from "../view/sort.js";
 import ShowMoreButtonView from "../view/show-more-button.js";
-import {render, RenderPosition, addElement, removeElement, remove} from "../utils/render.js";
+import FilmPresenter from "./film.js";
+import {updateItem} from "../utils/common.js";
+import {render, RenderPosition, remove} from "../utils/render.js";
 import {sortFilmDate, sortFilmRating} from "../utils/film.js";
 import {SortType} from "../const.js";
 
@@ -15,24 +15,40 @@ export default class MoveList {
     this._boardContainer = boardContainer;
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
     this._currentSortType = SortType.DEFAULT;
+    this._filmPresenter = {};
 
     this._boardComponent = new BoardView();
     this._noFilmComponent = new NoFilmView();
     this._sortComponent = new SortView();
     this._showMoreButtonComponent = new ShowMoreButtonView();
 
+    this._handleFilmChange = this._handleFilmChange.bind(this);
+    this._handleModelChange = this._handleModelChange.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
-  init(boardFilms) {
+  init(boardFilms, comments) {
     this._boardFilms = boardFilms.slice();
     this._sourceBoardFilms = boardFilms.slice();
+    this._comments = comments.slice();
 
     this._renderSort();
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
     this._renderBoard();
+  }
+
+  _handleModelChange() {
+    Object
+      .values(this._filmPresenter)
+      .forEach((presenter) => presenter.resetView());
+  }
+
+  _handleFilmChange(updateFilm, updateComment) {
+    this._boardFilms = updateItem(this._boardFilms, updateFilm);
+    this._sourceBoardFilms = updateItem(this._sourceBoardFilms, updateFilm);
+    this._filmPresenter[updateFilm.id].init(updateFilm, updateComment);
   }
 
   _sortFilms(sortType) {
@@ -65,55 +81,16 @@ export default class MoveList {
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
-  _renderFilm(container, film) {
-    const siteFooterElement = document.querySelector(`.footer`);
-
-    const filmComponent = new FilmView(film);
-    const filmPopupComponent = new PopupView(film);
-
-    const addFilmPopup = () => {
-      addElement(siteFooterElement, filmPopupComponent);
-    };
-
-    const removeFilmPopup = () => {
-      removeElement(filmPopupComponent);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        removeFilmPopup();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    filmComponent.setPosterClickHandler(() => {
-      addFilmPopup();
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    filmComponent.setTitleClickHandler(() => {
-      addFilmPopup();
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    filmComponent.setCommentsClickHandler(() => {
-      addFilmPopup();
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    filmPopupComponent.setCloseClickHandler(() => {
-      removeFilmPopup();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    });
-
-    render(container, filmComponent, RenderPosition.BEFOREEND);
+  _renderFilm(container, film, comment) {
+    const filmPresenter = new FilmPresenter(container, this._handleFilmChange, this._handleModelChange);
+    filmPresenter.init(film, comment);
+    this._filmPresenter[film.id] = filmPresenter;
   }
 
   _renderFilms(container, from, to) {
     this._boardFilms
     .slice(from, to)
-    .forEach((boardFilm) => this._renderFilm(container, boardFilm));
+    .forEach((boardFilm, index) => this._renderFilm(container, boardFilm, this._comments[index]));
   }
 
   _renderNoFilm(container) {
@@ -138,8 +115,10 @@ export default class MoveList {
   }
 
   _clearFilmList() {
-    const siteFilmsListContainer = this._boardContainer.querySelector(`.films-list__container`);
-    siteFilmsListContainer.innerHTML = ``;
+    Object
+      .values(this._filmPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._filmPresenter = {};
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
   }
 

@@ -4,6 +4,8 @@ import {getRandomInteger} from "../utils/common.js";
 const RANGE_MIN = 0;
 const RANGE_MAX = 4;
 
+const generateId = () => Date.now() + parseInt(Math.random() * 1000, 10);
+
 const movieNames = [
   `Easy Virtue`,
   `The Boat That Rocked`,
@@ -66,11 +68,11 @@ const actors = [
   `James Johnson`,
 ];
 
+export const authors = [`Liam Smith`, `Noah Johnson`, `William Williams`, `James Jones`, `Oliver Brown`];
 
 const createComment = () => {
   const emotions = [`angry`, `puke`, `sleeping`, `smile`];
   const date = generateDate();
-  const authors = [`Liam Smith`, `Noah Johnson`, `William Williams`, `James Jones`, `Oliver Brown`];
   const messages = [
     `Interesting setting and a good cast`,
     `Booooooooooring`,
@@ -97,7 +99,9 @@ const createComments = (count) => {
 
 export const generateFilm = () => {
   const comments = createComments(getRandomInteger(RANGE_MIN, RANGE_MAX));
+  const releaseDate = convertDateMilliseconds(...yearProductions[getRandomInteger(RANGE_MIN, yearProductions.length - 1)].split(` `));
   return {
+    id: generateId(),
     watchlist: Boolean(getRandomInteger(0, 1)),
     history: Boolean(getRandomInteger(0, 1)),
     favorites: Boolean(getRandomInteger(0, 1)),
@@ -109,12 +113,22 @@ export const generateFilm = () => {
     originalName: movieNames[getRandomInteger(RANGE_MIN, movieNames.length - 1)],
     poster: posters[getRandomInteger(RANGE_MIN, posters.length - 1)],
     rating: generateRating(RANGE_MIN, 9),
-    releaseDate: convertDateMilliseconds(...yearProductions[getRandomInteger(RANGE_MIN, yearProductions.length - 1)].split(` `)),
+    releaseDate,
     runtime: runtimes[getRandomInteger(RANGE_MIN, runtimes.length - 1)],
     genre: createRandomDescription(getRandomInteger(RANGE_MIN, 4), genres),
     numberСomments: comments.length,
     description: createRandomDescription(getRandomInteger(RANGE_MIN, RANGE_MAX), description).join(` `),
     ageRatings: ageRatings[getRandomInteger(RANGE_MIN, ageRatings.length - 1)],
+    comments,
+  };
+};
+
+export const generateComment = () => {
+  const comments = createComments(getRandomInteger(RANGE_MIN, RANGE_MAX));
+  return {
+    url: ``,
+    emoji: null,
+    description: ``,
     comments,
   };
 };
