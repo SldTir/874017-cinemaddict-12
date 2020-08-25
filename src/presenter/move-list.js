@@ -11,7 +11,9 @@ import {SortType} from "../const.js";
 const FILM_COUNT_PER_STEP = 5;
 
 export default class MoveList {
-  constructor(boardContainer) {
+  constructor(boardContainer, filmsModel, commentsModel) {
+    this._filmsModel = filmsModel;
+    this._commentsModel = commentsModel;
     this._boardContainer = boardContainer;
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
     this._currentSortType = SortType.DEFAULT;
@@ -37,6 +39,14 @@ export default class MoveList {
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
     this._renderBoard();
+  }
+
+  _getFilms() {
+    return this._filmsModel.getFilms();
+  }
+
+  _getComments() {
+    return this._comments.getComments();
   }
 
   _handleModelChange() {
