@@ -64,6 +64,8 @@ const createCommentsWrapTemplate = (comments) => {
   const {description, emoji, isEmoji} = comments;
   const emojiTemplate = isEmoji ? `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">` : ``;
   const numberСomments = comments.comments.length;
+  const textareaDisabledFlag = isEmoji ? `` : `disabled`;
+
   return (`
   <section class="film-details__comments-wrap">
     <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${numberСomments}</span></h3>
@@ -78,7 +80,7 @@ const createCommentsWrapTemplate = (comments) => {
       </div>
   
       <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${description}</textarea>
+        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${textareaDisabledFlag}>${description}</textarea>
       </label>
   
       <div class="film-details__emoji-list">
