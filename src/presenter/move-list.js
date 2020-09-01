@@ -3,7 +3,6 @@ import NoFilmView from "../view/no-film.js";
 import SortView from "../view/sort.js";
 import ShowMoreButtonView from "../view/show-more-button.js";
 import FilmPresenter from "./film.js";
-import {updateItem} from "../utils/common.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
 import {sortFilmDate, sortFilmRating} from "../utils/film.js";
 import {SortType} from "../const.js";
@@ -24,11 +23,13 @@ export default class MoveList {
     this._sortComponent = new SortView();
     this._showMoreButtonComponent = new ShowMoreButtonView();
 
-    this._handleFilmChange = this._handleFilmChange.bind(this);
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModelChange = this._handleModelChange.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-    this._renderFilms = this._renderFilms.bind(this);
+
+    this._filmsModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -58,8 +59,12 @@ export default class MoveList {
       .forEach((presenter) => presenter.resetView());
   }
 
-  _handleFilmChange(updateFilm, updateComment) {
-    this._filmPresenter[updateFilm.id].init(updateFilm, updateComment);
+  _handleViewAction(actionType, updateType, update) {
+    console.log(actionType, updateType, update);
+  }
+
+  _handleModelEvent(updateType, data) {
+    console.log(updateType, data);
   }
 
   _handleSortTypeChange(sortType) {
@@ -78,7 +83,7 @@ export default class MoveList {
   }
 
   _renderFilm(container, film, comment) {
-    const filmPresenter = new FilmPresenter(container, this._handleFilmChange, this._handleModelChange);
+    const filmPresenter = new FilmPresenter(container, this._handleViewAction, this._handleModelChange);
     filmPresenter.init(film, comment);
     this._filmPresenter[film.id] = filmPresenter;
   }

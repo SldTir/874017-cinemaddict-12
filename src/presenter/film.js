@@ -1,5 +1,6 @@
 import FilmView from "../view/film.js";
 import PopupView from "../view/popup.js";
+import {UserAction, UpdateType} from "../const.js";
 import {render, RenderPosition, addElement, removeElement, remove, replace} from "../utils/render.js";
 
 const Mode = {
@@ -119,6 +120,8 @@ export default class Film {
 
   _handleWatchlistClick() {
     this._changeData(
+        UserAction.UPDATE_TASK,
+        UpdateType.MINOR,
         Object.assign(
             {},
             this._film,
@@ -131,6 +134,8 @@ export default class Film {
   }
   _handleWatchedClick() {
     this._changeData(
+        UserAction.UPDATE_TASK,
+        UpdateType.MINOR,
         Object.assign(
             {},
             this._film,
@@ -143,6 +148,8 @@ export default class Film {
   }
   _handleFavoriteClick() {
     this._changeData(
+        UserAction.UPDATE_TASK,
+        UpdateType.MINOR,
         Object.assign(
             {},
             this._film,
