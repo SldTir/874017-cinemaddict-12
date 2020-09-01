@@ -19,9 +19,8 @@ commentsModel.setComments(comments);
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
-
 const moveListPresenter = new MoveListPresenter(siteMainElement, filmsModel, commentsModel);
 
 render(siteHeaderElement, new UserMenuView(), RenderPosition.BEFOREEND);
 render(siteMainElement, new SiteFilter(films), RenderPosition.BEFOREEND);
-moveListPresenter.init(films, comments);
+moveListPresenter.init();
