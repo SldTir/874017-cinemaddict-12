@@ -5,7 +5,7 @@ import ShowMoreButtonView from "../view/show-more-button.js";
 import FilmPresenter from "./film.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
 import {sortFilmDate, sortFilmRating} from "../utils/film.js";
-import {SortType} from "../const.js";
+import {SortType, UpdateType, UserAction} from "../const.js";
 
 const FILM_COUNT_PER_STEP = 5;
 
@@ -60,11 +60,29 @@ export default class MoveList {
   }
 
   _handleViewAction(actionType, updateType, update) {
-    console.log(actionType, updateType, update);
+    switch (actionType) {
+      case UserAction.UPDATE_FILM:
+        this._filmsModel.updateFilm(updateType, update);
+        break;
+      case UserAction.ADD_FILM:
+        this._filmsModel.addFilm(updateType, update);
+        break;
+      case UserAction.DELETE_FILM:
+        this._filmsModel.deleteFilm(updateType, update);
+        break;
+    }
   }
 
   _handleModelEvent(updateType, data) {
-    console.log(updateType, data);
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this._filmPresenter[data.id].init(data);
+        break;
+      case UpdateType.MINOR:
+        break;
+      case UpdateType.MAJOR:
+        break;
+    }
   }
 
   _handleSortTypeChange(sortType) {
