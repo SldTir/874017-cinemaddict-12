@@ -39,7 +39,7 @@ const createFilmDetailsControlsTemplate = (watchlist, history, favorites) => {
 
 const createCommentsTemplate = (comments) => {
   const commentsTemplate = comments.map((comment) => {
-    const {emotion, dueDate, author, message} = comment;
+    const {id, emotion, dueDate, author, message} = comment;
     const convertedDate = convertsDate(dueDate);
     return (
       `<li class="film-details__comment">
@@ -51,7 +51,7 @@ const createCommentsTemplate = (comments) => {
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${convertedDate}</span>
-          <button class="film-details__comment-delete">Delete</button>
+          <button class="film-details__comment-delete" data-id="${id}">Delete</button>
         </p>
       </div>
     </li>`
@@ -205,6 +205,7 @@ export default class Popup extends SmartView {
     this._textareaInputHandler = this._textareaInputHandler.bind(this);
     this._setInnerHandlers();
     this.updateData = this.updateData.bind(this);
+    this._commentDeleteHandler = this._commentDeleteHandler.bind(this);
   }
 
   reset(comments) {
@@ -294,6 +295,18 @@ export default class Popup extends SmartView {
 
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._textareaClickEnterHandler);
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`input`, this._textareaInputHandler);
+  }
+
+  _commentDeleteHandler(evt) {
+    evt.preventDefault();
+    const idComment = evt.target.getAttribute(`data-id`);
+    this._callback.deleteClick(idComment);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    const deleteButton = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+    deleteButton.forEach((element) => element.addEventListener(`click`, this._commentDeleteHandler));
   }
 
   static parseCommentsToData(comments) {

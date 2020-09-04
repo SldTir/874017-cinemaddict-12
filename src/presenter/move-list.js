@@ -26,11 +26,13 @@ export default class MoveList {
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._handleCommentModelEvent = this._handleCommentModelEvent.bind(this);
     this._handleModelChange = this._handleModelChange.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
     this._filmsModel.addObserver(this._handleModelEvent);
+    this._commentsModel.addObserver(this._handleCommentModelEvent);
   }
 
   init() {
@@ -59,16 +61,16 @@ export default class MoveList {
       .forEach((presenter) => presenter.resetView());
   }
 
-  _handleViewAction(actionType, updateType, update) {
+  _handleViewAction(actionType, updateType, update, id) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
         this._filmsModel.updateFilm(updateType, update);
         break;
-      case UserAction.ADD_FILM:
-        this._filmsModel.addFilm(updateType, update);
+      case UserAction.ADD_COMMENT:
+        this._commentsModel.addComment(updateType, update);
         break;
-      case UserAction.DELETE_FILM:
-        this._filmsModel.deleteFilm(updateType, update);
+      case UserAction.DELETE_COMMENT:
+        this._commentsModel.deleteComment(updateType, update, id);
         break;
     }
   }
@@ -76,7 +78,7 @@ export default class MoveList {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
-        this._filmPresenter[data.id].init(data);
+        this._filmPresenter[data.id].init(data, this._getComments()[data.id]);
         break;
       case UpdateType.MINOR:
         this._clearBoard();
@@ -87,6 +89,10 @@ export default class MoveList {
         this._renderBoard();
         break;
     }
+  }
+
+  _handleCommentModelEvent(type, data) {
+    this._filmPresenter[data.id].init(this._getFilms()[data.id], this._getComments()[data.id]);
   }
 
   _handleSortTypeChange(sortType) {

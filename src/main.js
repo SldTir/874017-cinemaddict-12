@@ -8,8 +8,8 @@ import {render, RenderPosition} from "./utils/render.js";
 
 const FILM_COUNT = 18;
 
-const films = new Array(FILM_COUNT).fill().map(generateFilm);
-const comments = new Array(FILM_COUNT).fill().map(generateComment);
+const films = new Array(FILM_COUNT).fill().map((element, id) => generateFilm(id));
+const comments = new Array(FILM_COUNT).fill().map((element, id) => generateComment(id));
 
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel();

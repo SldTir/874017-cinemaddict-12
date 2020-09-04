@@ -82,6 +82,7 @@ const createComment = () => {
   ];
 
   return {
+    id: generateId(),
     emotion: emotions[getRandomInteger(RANGE_MIN, emotions.length - 1)],
     dueDate: date,
     author: authors[getRandomInteger(RANGE_MIN, authors.length - 1)],
@@ -97,11 +98,11 @@ const createComments = (count) => {
   return comments;
 };
 
-export const generateFilm = () => {
+export const generateFilm = (id) => {
   const comments = createComments(getRandomInteger(RANGE_MIN, RANGE_MAX));
   const releaseDate = convertDateMilliseconds(...yearProductions[getRandomInteger(RANGE_MIN, yearProductions.length - 1)].split(` `));
   return {
-    id: generateId(),
+    id,
     watchlist: Boolean(getRandomInteger(0, 1)),
     history: Boolean(getRandomInteger(0, 1)),
     favorites: Boolean(getRandomInteger(0, 1)),
@@ -123,9 +124,10 @@ export const generateFilm = () => {
   };
 };
 
-export const generateComment = () => {
+export const generateComment = (id) => {
   const comments = createComments(getRandomInteger(RANGE_MIN, RANGE_MAX));
   return {
+    id,
     url: ``,
     emoji: null,
     description: ``,
