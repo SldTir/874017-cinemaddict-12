@@ -1,6 +1,7 @@
 import SmartView from "./smart.js";
 import {convertsDate, convertMillisecondsDatePopup} from "../utils/film.js";
 import {EmojiМessage} from "../const.js";
+import {generateId} from "../utils/common.js";
 
 const createGenresTemplate = (genre) => {
   const genreTemplate = genre.map((element) => {
@@ -75,7 +76,7 @@ const createCommentsWrapTemplate = (comments) => {
     </ul>
   
     <div class="film-details__new-comment">
-      <div for="add-emoji" class="film-details__add-emoji-label">
+      <div for="add-emoji" class="film-details__add-emoji-label" data-emoji="${emoji}">
         ${emojiTemplate}
       </div>
   
@@ -201,9 +202,7 @@ export default class Popup extends SmartView {
     this._watchedCickHandler = this._watchedCickHandler.bind(this);
     this._favoriteCickHandler = this._favoriteCickHandler.bind(this);
     this._emojiListClickHandler = this._emojiListClickHandler.bind(this);
-    this._textareaClickEnterHandler = this._textareaClickEnterHandler.bind(this);
-    this._textareaInputHandler = this._textareaInputHandler.bind(this);
-    this._setInnerHandlers();
+    this._addComment = this._addComment.bind(this);
     this.updateData = this.updateData.bind(this);
     this._commentDeleteHandler = this._commentDeleteHandler.bind(this);
   }
@@ -268,33 +267,39 @@ export default class Popup extends SmartView {
     commentInput.placeholder = EmojiМessage[targetEmoji];
   }
 
-  _textareaInputHandler(evt) {
-    evt.preventDefault();
-    this.updateData({
-      description: evt.target.value
-    }, true);
-  }
-
-  _textareaClickEnterHandler(evt) {
+  _addComment(evt) {
     if (evt.ctrlKey === true && evt.key === `Enter`) {
-      // Тут будет реализована логика сохранения данных
+      const newCommentContainer = this.getElement().querySelector(`.film-details__new-comment`);
+      const textarea = newCommentContainer.querySelector(`.film-details__comment-input`);
+      const id = generateId();
+      const emotion = newCommentContainer.querySelector(`.film-details__add-emoji-label`).getAttribute(`data-emoji`);
+      const dueDate = new Date();
+      const author = `A A`;
+      const message = textarea.value ? textarea.value : textarea.getAttribute(`placeholder`);
+      this._callback.ctrlEnterKeydown({
+        id,
+        emotion,
+        dueDate,
+        author,
+        message,
+      });
     }
   }
 
   restoreHandlers() {
-    this._setInnerHandlers();
+    this.setSubmitHandler(this._callback.ctrlEnterKeydown);
     this.setCloseClickHandler(this._callback.closeClick);
     this.setWatchlistClickHandler(this._callback.watchlistClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
   }
 
-  _setInnerHandlers() {
+  setSubmitHandler(callback) {
+    this._callback.ctrlEnterKeydown = callback;
     const emojiLabel = this.getElement().querySelector(`.film-details__emoji-list`).querySelectorAll(`label`);
     emojiLabel.forEach((element) => element.addEventListener(`click`, this._emojiListClickHandler));
 
-    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._textareaClickEnterHandler);
-    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`input`, this._textareaInputHandler);
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._addComment);
   }
 
   _commentDeleteHandler(evt) {

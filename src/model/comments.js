@@ -14,11 +14,10 @@ export default class Comments extends Observer {
     return this._comments;
   }
 
-  addComment(updateType, update) {
-    this._comments = [
-      update,
-      ...this._comments
-    ];
+  addComment(updateType, update, data) {
+    const index = this._comments.findIndex((comment) => comment.id === update.id);
+    const commentsTarget = this._comments[index];
+    commentsTarget.comments.push(data);
 
     this._notify(updateType, update);
   }

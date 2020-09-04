@@ -61,16 +61,16 @@ export default class MoveList {
       .forEach((presenter) => presenter.resetView());
   }
 
-  _handleViewAction(actionType, updateType, update, id) {
+  _handleViewAction(actionType, updateType, update, data) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
         this._filmsModel.updateFilm(updateType, update);
         break;
       case UserAction.ADD_COMMENT:
-        this._commentsModel.addComment(updateType, update);
+        this._commentsModel.addComment(updateType, update, data);
         break;
       case UserAction.DELETE_COMMENT:
-        this._commentsModel.deleteComment(updateType, update, id);
+        this._commentsModel.deleteComment(updateType, update, data);
         break;
     }
   }
@@ -78,7 +78,7 @@ export default class MoveList {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
-        this._filmPresenter[data.id].init(data, this._getComments()[data.id]);
+        this._filmPresenter[data.id].init(this._getFilms()[data.id], this._getComments()[data.id]);
         break;
       case UpdateType.MINOR:
         this._clearBoard();
@@ -122,7 +122,7 @@ export default class MoveList {
   }
 
   _renderFilms(container, films, comments) {
-    films.forEach((film, index) => this._renderFilm(container, film, comments[index]));
+    films.forEach((film) => this._renderFilm(container, film, comments[film.id]));
   }
 
   _renderNoFilm(container) {

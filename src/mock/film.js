@@ -1,10 +1,8 @@
 import {generateRating, createRandomDescription, generateDate, convertDateMilliseconds} from "../utils/film.js";
-import {getRandomInteger} from "../utils/common.js";
+import {getRandomInteger, generateId} from "../utils/common.js";
 
 const RANGE_MIN = 0;
 const RANGE_MAX = 4;
-
-const generateId = () => Date.now() + parseInt(Math.random() * 1000, 10);
 
 const movieNames = [
   `Easy Virtue`,
