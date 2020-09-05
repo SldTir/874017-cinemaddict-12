@@ -3,6 +3,7 @@ import SiteFilter from "./view/filter.js";
 import MoveListPresenter from "./presenter/move-list.js";
 import FilmsModel from "./model/film.js";
 import CommentsModel from "./model/comments.js";
+import FilterModel from "./model/filter.js";
 import {generateFilm, generateComment} from "./mock/film.js";
 import {render, RenderPosition} from "./utils/render.js";
 
@@ -13,6 +14,8 @@ const comments = new Array(FILM_COUNT).fill().map((element, id) => generateComme
 
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel();
+
+const filterModel = new FilterModel();
 
 filmsModel.setFilms(films);
 commentsModel.setComments(comments);
