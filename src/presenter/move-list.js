@@ -156,21 +156,6 @@ export default class MoveList {
     render(this._boardComponent, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
   }
 
-  _clearFilmList() {
-    Object
-      .values(this._filmPresenter)
-      .forEach((presenter) => presenter.destroy());
-    this._filmPresenter = {};
-    this._renderedFilmCount = FILM_COUNT_PER_STEP;
-  }
-
-  _renderFilmList(siteFilmsListContainer) {
-    const filmCout = this._getFilms().length;
-    const films = this._getFilms().slice(0, Math.min(filmCout, FILM_COUNT_PER_STEP));
-
-    this._renderFilms(siteFilmsListContainer, films, this._getComments());
-  }
-
   _clearBoard({resetRenderedFilmCount = false, resetSortType = false} = {}) {
     const filmCount = this._getFilms().length;
 
