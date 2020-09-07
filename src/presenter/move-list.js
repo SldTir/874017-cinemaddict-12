@@ -84,7 +84,9 @@ export default class MoveList {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
-        this._filmPresenter[data.id].init(this._getFilms()[data.id], this._getComments()[data.id]);
+        const indexFilm = this._getFilms().findIndex((film) => film.id === data.id);
+        const indexComment = this._getComments().findIndex((comment) => comment.id === data.id);
+        this._filmPresenter[data.id].init(this._getFilms()[indexFilm], this._getComments()[indexComment]);
         break;
       case UpdateType.MINOR:
         this._clearBoard();

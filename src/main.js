@@ -7,7 +7,7 @@ import FilterModel from "./model/filter.js";
 import {generateFilm, generateComment} from "./mock/film.js";
 import {render, RenderPosition} from "./utils/render.js";
 
-const FILM_COUNT = 5;
+const FILM_COUNT = 15;
 
 const films = new Array(FILM_COUNT).fill().map((element, id) => generateFilm(id));
 const comments = new Array(FILM_COUNT).fill().map((element, id) => generateComment(id));

@@ -125,7 +125,7 @@ export default class Film {
   _handleWatchlistClick() {
     this._changeData(
         UserAction.UPDATE_FILM,
-        UpdateType.PATCH,
+        UpdateType.MAJOR,
         Object.assign(
             {},
             this._film,
@@ -168,7 +168,7 @@ export default class Film {
   _handleSubmitHandler(newComment) {
     this._changeData(
         UserAction.ADD_COMMENT,
-        UpdateType.MAJOR,
+        UpdateType.PATCH,
         this._comments,
         newComment
     );
