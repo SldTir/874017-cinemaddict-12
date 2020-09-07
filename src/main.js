@@ -22,7 +22,7 @@ commentsModel.setComments(comments);
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
-const moveListPresenter = new MoveListPresenter(siteMainElement, filmsModel, commentsModel);
+const moveListPresenter = new MoveListPresenter(siteMainElement, filmsModel, commentsModel, filterModel);
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel);
 
 render(siteHeaderElement, new UserMenuView(), RenderPosition.BEFOREEND);

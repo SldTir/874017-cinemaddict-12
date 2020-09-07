@@ -1,18 +1,12 @@
 import AbstractView from "./abstract.js";
-import {FilterType} from "../const";
 
 const createFilterItemTemplate = (filter, currentFilterType) => {
   const {type, name, count} = filter;
-  debugger;
   const activeFilter = currentFilterType === type ? `main-navigation__item--active` : ``;
-  let filterContent;
-  if (FilterType.ALL_MOVIES === type) {
-    filterContent = type;
-  } else {
-    filterContent = count > 5 ? type : `${type} <span class="main-navigation__item-count">${count}</span>`;
-  }
+  const filterContent = type === `All movies` ? type : `${type} <span class="main-navigation__item-count">${count}</span>`;
+
   return (
-    `<a href="${name}" class="main-navigation__item ${activeFilter}">${filterContent}</a>`
+    `<a href="${name}" class="main-navigation__item ${activeFilter}" data-filter-name="${type}">${filterContent}</a>`
   );
 };
 
@@ -43,12 +37,13 @@ export default class FilterView extends AbstractView {
   }
 
   _filterTypeChangeHandler(evt) {
-    evt.preventDefatult();
-    this._callback.filterTypeChange(evt.target.value);
+    evt.preventDefault();
+    this._callback.filterTypeChange(evt.target.getAttribute(`data-filter-name`));
   }
 
   setFilterTypeChangeHandler(callback) {
     this._callback.filterTypeChange = callback;
-    this.getElement().addEventListener(`change`, this._filterTypeChangeHandler);
+    const navigationItem = this.getElement().querySelectorAll(`.main-navigation__item`);
+    navigationItem.forEach((item) => item.addEventListener(`click`, this._filterTypeChangeHandler));
   }
 }
