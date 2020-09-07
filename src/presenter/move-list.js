@@ -1,4 +1,5 @@
 import BoardView from "../view/board.js";
+import FilmList from "../view/film-list.js";
 import NoFilmView from "../view/no-film.js";
 import SortView from "../view/sort.js";
 import ShowMoreButtonView from "../view/show-more-button.js";
@@ -24,6 +25,7 @@ export default class MoveList {
     this._showMoreButtonComponent = null;
 
     this._boardComponent = new BoardView();
+    this._filmListComponent = new FilmList();
     this._noFilmComponent = new NoFilmView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
@@ -39,13 +41,12 @@ export default class MoveList {
 
   init() {
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
-
     this._renderBoard();
   }
 
   _getFilms() {
     const filterType = this._filterModel.getFilter();
-    const films = this._filmsModel.getFilms();
+    const films = this._filmsModel.getFilms().slice();
     const filtredFilms = filter[filterType](films);
     switch (this._currentSortType) {
       case SortType.DATE:
@@ -127,7 +128,11 @@ export default class MoveList {
   }
 
   _renderNoFilm(container) {
-    render(container, this._noFilmComponent, RenderPosition.AFTERBEGIN);
+    render(container, this._noFilmComponent, RenderPosition.BEFOREEND);
+  }
+
+  _renderFilmList(container) {
+    render(container, this._filmListComponent, RenderPosition.BEFOREEND);
   }
 
   _handleShowMoreButtonClick() {
@@ -157,7 +162,7 @@ export default class MoveList {
     render(this._boardComponent, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
   }
 
-  _clearBoard({resetRenderedFilmCount = false, resetSortType = false} = {}) {
+  _clearBoard({resetRenderedTaskCount = false, resetSortType = false} = {}) {
     const filmCount = this._getFilms().length;
 
     Object
@@ -169,7 +174,7 @@ export default class MoveList {
     remove(this._noFilmComponent);
     remove(this._showMoreButtonComponent);
 
-    if (resetRenderedFilmCount) {
+    if (resetRenderedTaskCount) {
       this._renderedFilmCount = FILM_COUNT_PER_STEP;
     } else {
       this._renderedFilmCount = Math.min(filmCount, this._renderedFilmCount);
@@ -181,21 +186,20 @@ export default class MoveList {
   }
 
   _renderBoard() {
-    const siteFilmsListContainer = this._boardContainer.querySelector(`.films-list__container`);
-    const siteFilmList = this._boardContainer.querySelector(`.films-list`);
     const films = this._getFilms();
     const filmCount = films.length;
     const comments = this._getComments();
-
-    if (this._getFilms().length === 0) {
-      siteFilmList.innerHTML = ``;
-      this._renderNoFilm(siteFilmList);
-      return;
-    }
-
     this._renderSort();
 
-    this._renderFilms(siteFilmsListContainer, films.slice(0, Math.min(filmCount, this._renderedFilmCount)), comments);
+    if (this._getFilms().length === 0) {
+      this._renderNoFilm(this._boardComponent);
+      return;
+    } else {
+      this._renderFilmList(this._boardComponent);
+    }
+
+    const filmListComntainer = this._filmListComponent.getElement().querySelector(`.films-list__container`);
+    this._renderFilms(filmListComntainer, films.slice(0, Math.min(filmCount, this._renderedFilmCount)), comments);
 
     if (this._getFilms().length > this._renderedFilmCount) {
       this._renderShowMoreButton();
