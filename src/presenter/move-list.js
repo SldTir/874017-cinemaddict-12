@@ -129,12 +129,12 @@ export default class MoveList {
     films.forEach((film) => this._renderFilm(container, film, comments[film.id]));
   }
 
-  _renderNoFilm(container) {
-    render(container, this._noFilmComponent, RenderPosition.BEFOREEND);
+  _renderNoFilm() {
+    render(this._boardComponent, this._noFilmComponent, RenderPosition.BEFOREEND);
   }
 
-  _renderFilmList(container) {
-    render(container, this._filmListComponent, RenderPosition.BEFOREEND);
+  _renderFilmList() {
+    render(this._boardComponent, this._filmListComponent, RenderPosition.BEFOREEND);
   }
 
   _handleShowMoreButtonClick() {
@@ -194,10 +194,12 @@ export default class MoveList {
     this._renderSort();
 
     if (this._getFilms().length === 0) {
-      this._renderNoFilm(this._boardComponent);
+      this._boardComponent.getElement().innerHTML = ``;
+      this._renderNoFilm();
       return;
     } else {
-      this._renderFilmList(this._boardComponent);
+      this._boardComponent.getElement().innerHTML = ``;
+      this._renderFilmList();
     }
 
     const filmListComntainer = this._filmListComponent.getElement().querySelector(`.films-list__container`);

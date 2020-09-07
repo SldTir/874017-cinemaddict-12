@@ -1,3 +1,4 @@
+import he from "he";
 import SmartView from "./smart.js";
 import {convertsDate, convertMillisecondsDatePopup} from "../utils/film.js";
 import {EmojiМessage} from "../const.js";
@@ -81,7 +82,7 @@ const createCommentsWrapTemplate = (comments) => {
       </div>
   
       <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${textareaDisabledFlag}>${description}</textarea>
+        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${textareaDisabledFlag}>${he.encode(description)}</textarea>
       </label>
   
       <div class="film-details__emoji-list">
