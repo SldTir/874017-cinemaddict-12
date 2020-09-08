@@ -190,17 +190,18 @@ export default class MoveList {
   _renderBoard() {
     const films = this._getFilms();
     const filmCount = films.length;
-    const comments = this._getComments();
     this._renderSort();
 
     if (this._getFilms().length === 0) {
       remove(this._filmListComponent);
       this._renderNoFilm();
       return;
-    } else {
-      remove(this._noFilmComponent);
-      this._renderFilmList();
     }
+
+    const comments = this._getComments();
+
+    remove(this._noFilmComponent);
+    this._renderFilmList();
 
     const filmListComntainer = this._filmListComponent.getElement().querySelector(`.films-list__container`);
     this._renderFilms(filmListComntainer, films.slice(0, Math.min(filmCount, this._renderedFilmCount)), comments);
