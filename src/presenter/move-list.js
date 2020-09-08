@@ -194,11 +194,11 @@ export default class MoveList {
     this._renderSort();
 
     if (this._getFilms().length === 0) {
-      this._boardComponent.getElement().innerHTML = ``;
+      remove(this._filmListComponent);
       this._renderNoFilm();
       return;
     } else {
-      this._boardComponent.getElement().innerHTML = ``;
+      remove(this._noFilmComponent);
       this._renderFilmList();
     }
 
