@@ -1,5 +1,6 @@
 import FilmView from "../view/film.js";
 import PopupView from "../view/popup.js";
+import {UserAction, UpdateType} from "../const.js";
 import {render, RenderPosition, addElement, removeElement, remove, replace} from "../utils/render.js";
 
 const Mode = {
@@ -26,6 +27,8 @@ export default class Film {
     this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
+    this._handleSubmitHandler = this._handleSubmitHandler.bind(this);
   }
 
   init(film, comments) {
@@ -49,6 +52,8 @@ export default class Film {
     this._popupComponent.setWatchlistClickHandler(this._handleWatchlistClick);
     this._popupComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._popupComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._popupComponent.setDeleteClickHandler(this._handleDeleteClick);
+    this._popupComponent.setSubmitHandler(this._handleSubmitHandler);
 
     if (prevFilmComponent === null || prevPopupComponent === null) {
       render(this._filmListContainer, this._filmComponent, RenderPosition.BEFOREEND);
@@ -119,6 +124,8 @@ export default class Film {
 
   _handleWatchlistClick() {
     this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.MAJOR,
         Object.assign(
             {},
             this._film,
@@ -131,6 +138,8 @@ export default class Film {
   }
   _handleWatchedClick() {
     this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.MAJOR,
         Object.assign(
             {},
             this._film,
@@ -143,6 +152,8 @@ export default class Film {
   }
   _handleFavoriteClick() {
     this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.MAJOR,
         Object.assign(
             {},
             this._film,
@@ -151,6 +162,23 @@ export default class Film {
             }
         ),
         this._comments
+    );
+  }
+
+  _handleSubmitHandler(newComment) {
+    this._changeData(
+        UserAction.ADD_COMMENT,
+        UpdateType.PATCH,
+        this._comments,
+        newComment
+    );
+  }
+  _handleDeleteClick(idComment) {
+    this._changeData(
+        UserAction.DELETE_COMMENT,
+        UpdateType.PATCH,
+        this._comments,
+        idComment
     );
   }
 }
