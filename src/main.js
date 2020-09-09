@@ -4,6 +4,7 @@ import FilmsModel from "./model/film.js";
 import CommentsModel from "./model/comments.js";
 import FilterPresenter from "./presenter/filter.js";
 import FilterModel from "./model/filter.js";
+import {UpdateType} from "./const.js";
 import {generateComment} from "./mock/film.js";
 import {render, RenderPosition} from "./utils/render.js";
 import Api from "./api.js";
@@ -33,6 +34,10 @@ render(siteHeaderElement, new UserMenuView(), RenderPosition.BEFOREEND);
 filterPresenter.init();
 moveListPresenter.init();
 
-api.getFilms().then((films) => {
-  filmsModel.setFilms(films);
-});
+api.getFilms()
+  .then((films) => {
+    filmsModel.setFilms(UpdateType.INIT, films);
+  })
+  .catch(() => {
+    filmsModel.setFilms(UpdateType.INIT, []);
+  });
