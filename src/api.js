@@ -15,7 +15,7 @@ export default class Api {
   }
 
   getFilms() {
-    return this._load({url: `films`})
+    return this._load({url: `movies`})
       .then(Api.toJSON);
   }
 
