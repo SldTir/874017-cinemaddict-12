@@ -1,4 +1,5 @@
 import {getRandomInteger} from "./common.js";
+import {Month} from "../const.js";
 const RANGE_MIN = 0;
 
 export const generateRating = (a = 0, b = 1) => {
@@ -38,16 +39,17 @@ export const convertsDate = (date) => {
   return convertedDate;
 };
 
-export const convertDateMilliseconds = (day, month, year) => {
-  return new Date(`${day}, ${month}, ${year}`).getTime();
+export const convertDateMilliseconds = (date) => {
+  return new Date(date).getTime();
 };
 
 export const convertMillisecondsDatePopup = (dateMill) => {
   const nedDate = new Date(dateMill);
   const day = String(nedDate.getDate()).padStart(2, `0`);
   const year = nedDate.getFullYear();
-  const month = String(nedDate.getMonth() + 1).padStart(2, `0`);
-  const convertedDate = `${year}/${month}/${day}`;
+  const monthNumber = nedDate.getMonth();
+  const month = Month[monthNumber];
+  const convertedDate = `${day} ${month} ${year}`;
   return convertedDate;
 };
 
@@ -67,13 +69,15 @@ const getWeightForNullValue = (valueA, valueB) => {
 };
 
 export const sortFilmDate = (filmA, filmB) => {
-  const weight = getWeightForNullValue(filmA.releaseDate, filmB.releaseDate);
+  const dateAMs = convertDateMilliseconds(filmA.releaseDate);
+  const dateBMs = convertDateMilliseconds(filmB.releaseDate);
+  const weight = getWeightForNullValue(dateAMs, dateBMs);
 
   if (weight !== null) {
     return weight;
   }
 
-  return filmB.releaseDate - filmA.releaseDate;
+  return dateAMs - dateBMs;
 };
 
 export const sortFilmRating = (filmA, filmB) => {

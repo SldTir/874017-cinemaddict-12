@@ -12,7 +12,7 @@ import Api from "./api.js";
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 
-const FILM_COUNT = 15;
+const FILM_COUNT = 20;
 const AUTHORIZATION = `Basic er883jdzbdw`;
 const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
 

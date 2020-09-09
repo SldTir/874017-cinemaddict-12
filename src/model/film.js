@@ -1,5 +1,4 @@
 import Observer from "../utils/observer.js";
-
 export default class Films extends Observer {
   constructor() {
     super();
@@ -47,13 +46,13 @@ export default class Films extends Observer {
           name: film.film_info.title,
           originalName: film.film_info.alternative_title,
           poster: film.film_info.poster,
-          rating: film.film_info.age_rating,
+          rating: film.film_info.total_rating,
           releaseDate: film.film_info.release.date,
           runtime: film.film_info.runtime,
           genre: film.film_info.genre,
           numberСomments: film.comments.length,
           description: film.film_info.description,
-          ageRatings: film.film_info.total_rating,
+          ageRatings: film.film_info.age_rating,
           watchingDate: film.user_details.watching_date,
         });
 
@@ -76,7 +75,7 @@ export default class Films extends Observer {
           },
           "film_info": {
             "actors": film.actors,
-            "age_rating": film.rating,
+            "age_rating": film.ageRatings,
             "alternative_title": film.originalName,
             "description": film.description,
             "director": film.director,
@@ -88,7 +87,7 @@ export default class Films extends Observer {
             },
             "runtime": film.runtime,
             "title": film.name,
-            "total_rating": film.ageRatings,
+            "total_rating": film.rating,
             "writers": film.writers,
           }
         }
