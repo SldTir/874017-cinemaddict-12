@@ -27,7 +27,7 @@ const filterModel = new FilterModel();
 commentsModel.setComments(comments);
 
 
-const moveListPresenter = new MoveListPresenter(siteMainElement, filmsModel, commentsModel, filterModel);
+const moveListPresenter = new MoveListPresenter(siteMainElement, filmsModel, commentsModel, filterModel, api);
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel);
 
 render(siteHeaderElement, new UserMenuView(), RenderPosition.BEFOREEND);

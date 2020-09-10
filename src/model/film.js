@@ -24,7 +24,7 @@ export default class Films extends Observer {
 
     this._films = [
       ...this._films.slice(0, index),
-      update,
+      Films.adaptToClient(update),
       ...this._films.slice(index + 1)
     ];
 

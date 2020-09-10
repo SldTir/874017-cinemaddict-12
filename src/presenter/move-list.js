@@ -13,7 +13,7 @@ import {SortType, UpdateType, UserAction} from "../const.js";
 const FILM_COUNT_PER_STEP = 5;
 
 export default class MoveList {
-  constructor(boardContainer, filmsModel, commentsModel, filterModel) {
+  constructor(boardContainer, filmsModel, commentsModel, filterModel, api) {
     this._filmsModel = filmsModel;
     this._commentsModel = commentsModel;
     this._filterModel = filterModel;
@@ -22,6 +22,7 @@ export default class MoveList {
     this._currentSortType = SortType.DEFAULT;
     this._filmPresenter = {};
     this._isLoading = true;
+    this._api = api;
 
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
@@ -73,7 +74,10 @@ export default class MoveList {
   _handleViewAction(actionType, updateType, update, data) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
-        this._filmsModel.updateFilm(updateType, update);
+        // this._filmsModel.updateFilm(updateType, update);
+        this._api.updateFilm(update).then((response) => {
+          this._filmsModel.updateFilm(updateType, response);
+        });
         break;
       case UserAction.ADD_COMMENT:
         this._commentsModel.addComment(updateType, update, data);
