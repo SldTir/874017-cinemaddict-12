@@ -34,7 +34,7 @@ const createFilmTemplate = (film, comments) => {
   const date = dateConvert.split(` `)[2];
   const briefDescription = truncatesText(description, MAX_NUMBER_CHARACTERS);
   const filmCardControlsTemplate = createFilmCardControlsTemplate(watchlist, history, favorites);
-  const numberСomments = comments.comments.length;
+  const numberСomments = comments.comment.length;
 
   return (
     `<article class="film-card">

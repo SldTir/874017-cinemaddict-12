@@ -74,7 +74,6 @@ export default class MoveList {
   _handleViewAction(actionType, updateType, update, data) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
-        // this._filmsModel.updateFilm(updateType, update);
         this._api.updateFilm(update).then((response) => {
           this._filmsModel.updateFilm(updateType, response);
         });

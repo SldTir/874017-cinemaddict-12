@@ -12,32 +12,44 @@ import Api from "./api.js";
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 
-const FILM_COUNT = 20;
 const AUTHORIZATION = `Basic er883jdzbdw`;
 const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
 
 const api = new Api(END_POINT, AUTHORIZATION);
-const comments = new Array(FILM_COUNT).fill().map((element, id) => generateComment(id));
 
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel();
 
 const filterModel = new FilterModel();
 
-commentsModel.setComments(comments);
-
-
 const moveListPresenter = new MoveListPresenter(siteMainElement, filmsModel, commentsModel, filterModel, api);
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel);
 
 render(siteHeaderElement, new UserMenuView(), RenderPosition.BEFOREEND);
 filterPresenter.init();
+
 moveListPresenter.init();
+
+const getCommentsApi = (updateType) => {
+  const films = filmsModel.getFilms();
+  films.forEach((film) => {
+    const url = `comments/${film.id}`;
+    api.getComments(url, film.id)
+      .then((comment) => {
+        commentsModel.setComments(updateType, comment, films.length);
+      });
+  });
+};
 
 api.getFilms()
   .then((films) => {
-    filmsModel.setFilms(UpdateType.INIT, films);
+    filmsModel.setFilms(films);
+  })
+  .then(() => {
+    getCommentsApi(UpdateType.INIT);
   })
   .catch(() => {
     filmsModel.setFilms(UpdateType.INIT, []);
   });
+
+
