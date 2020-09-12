@@ -141,7 +141,10 @@ export default class MoveList {
   }
 
   _renderFilms(container, films, comments) {
-    films.forEach((film) => this._renderFilm(container, film, comments[film.id]));
+    films.forEach((film) => {
+      const commentIndex = comments.findIndex((comment) => comment.filmId === film.id);
+      this._renderFilm(container, film, comments[commentIndex]);
+    });
   }
 
   _renderNoFilm() {

@@ -40,8 +40,6 @@ const createFilmDetailsControlsTemplate = (watchlist, history, favorites) => {
 };
 
 const createCommentsTemplate = (comments) => {
-  debugger;
-
   const commentsTemplate = comments.map((element) => {
     const {id, emotion, date, author, comment} = element;
     const convertedDate = convertsDate(date);

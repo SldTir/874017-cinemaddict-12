@@ -5,7 +5,6 @@ import CommentsModel from "./model/comments.js";
 import FilterPresenter from "./presenter/filter.js";
 import FilterModel from "./model/filter.js";
 import {UpdateType} from "./const.js";
-import {generateComment} from "./mock/film.js";
 import {render, RenderPosition} from "./utils/render.js";
 import Api from "./api.js";
 
@@ -44,6 +43,9 @@ const getCommentsApi = (updateType) => {
 api.getFilms()
   .then((films) => {
     filmsModel.setFilms(films);
+  })
+  .then(() => {
+    filterPresenter.init();
   })
   .then(() => {
     getCommentsApi(UpdateType.INIT);
