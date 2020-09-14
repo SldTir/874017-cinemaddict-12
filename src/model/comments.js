@@ -6,8 +6,11 @@ export default class Comments extends Observer {
     this._comments = [];
   }
 
-  setComments(comments) {
-    this._comments = comments.slice();
+  setComments(updateType, comment, filmLength) {
+    this._comments.push(comment);
+    if (this._comments.length === filmLength) {
+      this._notify(updateType);
+    }
   }
 
   getComments() {
@@ -35,5 +38,15 @@ export default class Comments extends Observer {
     this._comments[index].comments.splice(commentsDelitingIndex, 1);
 
     this._notify(updateType, update);
+  }
+
+  static adaptToClient(comment, filmId) {
+    return {
+      comment,
+      description: ``,
+      emoji: null,
+      filmId,
+      url: ``,
+    };
   }
 }

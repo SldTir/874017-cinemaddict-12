@@ -2,6 +2,7 @@ import BoardView from "../view/board.js";
 import FilmList from "../view/film-list.js";
 import NoFilmView from "../view/no-film.js";
 import SortView from "../view/sort.js";
+import LoadingView from "../view/loading.js";
 import ShowMoreButtonView from "../view/show-more-button.js";
 import FilmPresenter from "./film.js";
 import {filter} from "../utils/filter.js";
@@ -12,7 +13,7 @@ import {SortType, UpdateType, UserAction} from "../const.js";
 const FILM_COUNT_PER_STEP = 5;
 
 export default class MoveList {
-  constructor(boardContainer, filmsModel, commentsModel, filterModel) {
+  constructor(boardContainer, filmsModel, commentsModel, filterModel, api) {
     this._filmsModel = filmsModel;
     this._commentsModel = commentsModel;
     this._filterModel = filterModel;
@@ -20,6 +21,8 @@ export default class MoveList {
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
     this._currentSortType = SortType.DEFAULT;
     this._filmPresenter = {};
+    this._isLoading = true;
+    this._api = api;
 
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
@@ -27,6 +30,7 @@ export default class MoveList {
     this._boardComponent = new BoardView();
     this._filmListComponent = new FilmList();
     this._noFilmComponent = new NoFilmView();
+    this._loadingComponent = new LoadingView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -70,7 +74,9 @@ export default class MoveList {
   _handleViewAction(actionType, updateType, update, data) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
-        this._filmsModel.updateFilm(updateType, update);
+        this._api.updateFilm(update).then((response) => {
+          this._filmsModel.updateFilm(updateType, response);
+        });
         break;
       case UserAction.ADD_COMMENT:
         this._commentsModel.addComment(updateType, update, data);
@@ -94,6 +100,11 @@ export default class MoveList {
         break;
       case UpdateType.MAJOR:
         this._clearBoard({resetRenderedTaskCount: true, resetSortType: true});
+        this._renderBoard();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
         this._renderBoard();
         break;
     }
@@ -125,8 +136,15 @@ export default class MoveList {
     this._filmPresenter[film.id] = filmPresenter;
   }
 
+  _renderLoading() {
+    render(this._boardComponent, this._loadingComponent, RenderPosition.AFTERBEGIN);
+  }
+
   _renderFilms(container, films, comments) {
-    films.forEach((film) => this._renderFilm(container, film, comments[film.id]));
+    films.forEach((film) => {
+      const commentIndex = comments.findIndex((comment) => comment.filmId === film.id);
+      this._renderFilm(container, film, comments[commentIndex]);
+    });
   }
 
   _renderNoFilm() {
@@ -174,6 +192,7 @@ export default class MoveList {
 
     remove(this._sortComponent);
     remove(this._noFilmComponent);
+    remove(this._loadingComponent);
     remove(this._showMoreButtonComponent);
 
     if (resetRenderedTaskCount) {
@@ -188,6 +207,11 @@ export default class MoveList {
   }
 
   _renderBoard() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     const films = this._getFilms();
     const filmCount = films.length;
     this._renderSort();

@@ -1,5 +1,5 @@
 import AbstractView from "./abstract.js";
-import {convertMillisecondsDatePopup} from "../utils/film.js";
+import {convertDateMilliseconds, convertMillisecondsDatePopup} from "../utils/film.js";
 
 const MAX_NUMBER_CHARACTERS = 139;
 
@@ -29,12 +29,12 @@ const createFilmCardControlsTemplate = (watchlist, history, favorites) => {
 
 const createFilmTemplate = (film, comments) => {
   const {watchlist, history, favorites, name, poster, rating, releaseDate, runtime, genre, description} = film;
-  const dateConvert = convertMillisecondsDatePopup(releaseDate);
+  const dateConvert = convertMillisecondsDatePopup(convertDateMilliseconds(releaseDate));
   const genreUp = genre.join(`, `);
   const date = dateConvert.split(` `)[2];
   const briefDescription = truncatesText(description, MAX_NUMBER_CHARACTERS);
   const filmCardControlsTemplate = createFilmCardControlsTemplate(watchlist, history, favorites);
-  const numberСomments = comments.comments.length;
+  const numberСomments = comments.comment.length;
 
   return (
     `<article class="film-card">
@@ -45,7 +45,7 @@ const createFilmTemplate = (film, comments) => {
       <span class="film-card__duration">${runtime}</span>
       <span class="film-card__genre">${genreUp}</span>
     </p>
-    <img src="./images/posters/${poster}" alt="${name}" class="film-card__poster">
+    <img src="./${poster}" alt="${name}" class="film-card__poster">
     <p class="film-card__description">${briefDescription}</p>
     <a class="film-card__comments">${numberСomments} comments</a>
     ${filmCardControlsTemplate}

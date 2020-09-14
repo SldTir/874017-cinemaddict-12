@@ -40,16 +40,16 @@ const createFilmDetailsControlsTemplate = (watchlist, history, favorites) => {
 };
 
 const createCommentsTemplate = (comments) => {
-  const commentsTemplate = comments.map((comment) => {
-    const {id, emotion, dueDate, author, message} = comment;
-    const convertedDate = convertsDate(dueDate);
+  const commentsTemplate = comments.map((element) => {
+    const {id, emotion, date, author, comment} = element;
+    const convertedDate = convertsDate(date);
     return (
       `<li class="film-details__comment">
       <span class="film-details__comment-emoji">
         <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
       </span>
       <div>
-        <p class="film-details__comment-text">${message}</p>
+        <p class="film-details__comment-text">${comment}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${convertedDate}</span>
@@ -65,7 +65,7 @@ const createCommentsTemplate = (comments) => {
 const createCommentsWrapTemplate = (comments) => {
   const {description, emoji, isEmoji} = comments;
   const emojiTemplate = isEmoji ? `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">` : ``;
-  const numberСomments = comments.comments.length;
+  const numberСomments = comments.comment.length;
   const textareaDisabledFlag = isEmoji ? `` : `disabled`;
 
   return (`
@@ -73,7 +73,7 @@ const createCommentsWrapTemplate = (comments) => {
     <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${numberСomments}</span></h3>
   
     <ul class="film-details__comments-list">
-      ${createCommentsTemplate(comments.comments)}
+      ${createCommentsTemplate(comments.comment)}
     </ul>
   
     <div class="film-details__new-comment">
@@ -126,7 +126,7 @@ const createPopupTemplate = (film, comments) => {
         </div>
         <div class="film-details__info-wrap">
           <div class="film-details__poster">
-            <img class="film-details__poster-img" src="./images/posters/${poster}" alt="${originalName}">
+            <img class="film-details__poster-img" src="./${poster}" alt="${originalName}">
   
             <p class="film-details__age">${ageRatings}</p>
           </div>
@@ -150,11 +150,11 @@ const createPopupTemplate = (film, comments) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Writers</td>
-                <td class="film-details__cell">${writers}</td>
+                <td class="film-details__cell">${writers.join(`, `)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Actors</td>
-                <td class="film-details__cell">${actors}</td>
+                <td class="film-details__cell">${actors.join(`, `)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
