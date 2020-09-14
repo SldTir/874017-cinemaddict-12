@@ -32,8 +32,7 @@ moveListPresenter.init();
 const getCommentsApi = (updateType) => {
   const films = filmsModel.getFilms();
   films.forEach((film) => {
-    const url = `comments/${film.id}`;
-    api.getComments(url, film.id)
+    api.getComments(film.id)
       .then((comment) => {
         commentsModel.setComments(updateType, comment, films.length);
       });
@@ -43,11 +42,7 @@ const getCommentsApi = (updateType) => {
 api.getFilms()
   .then((films) => {
     filmsModel.setFilms(films);
-  })
-  .then(() => {
     filterPresenter.init();
-  })
-  .then(() => {
     getCommentsApi(UpdateType.INIT);
   })
   .catch(() => {
