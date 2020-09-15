@@ -2,7 +2,6 @@ import he from "he";
 import SmartView from "./smart.js";
 import {convertsDate, convertMillisecondsDatePopup} from "../utils/film.js";
 import {EmojiМessage} from "../const.js";
-import {generateId} from "../utils/common.js";
 
 const createGenresTemplate = (genre) => {
   const genreTemplate = genre.map((element) => {
@@ -272,16 +271,12 @@ export default class Popup extends SmartView {
     if (evt.ctrlKey === true && evt.key === `Enter`) {
       const newCommentContainer = this.getElement().querySelector(`.film-details__new-comment`);
       const textarea = newCommentContainer.querySelector(`.film-details__comment-input`);
-      const id = generateId();
       const emotion = newCommentContainer.querySelector(`.film-details__add-emoji-label`).getAttribute(`data-emoji`);
-      const dueDate = new Date();
-      const author = `A A`;
+      const dueDate = new Date().toISOString();
       const message = textarea.value ? textarea.value : textarea.getAttribute(`placeholder`);
       this._callback.ctrlEnterKeydown({
-        id,
         emotion,
         dueDate,
-        author,
         message,
       });
     }
