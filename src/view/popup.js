@@ -38,10 +38,12 @@ const createFilmDetailsControlsTemplate = (watchlist, history, favorites) => {
     `);
 };
 
-const createCommentsTemplate = (comments) => {
+const createCommentsTemplate = (comments, isDeleting) => {
   const commentsTemplate = comments.map((element) => {
     const {id, emotion, date, author, comment} = element;
     const convertedDate = convertsDate(date);
+    const textButton = isDeleting ? `Deleting...` : `Delete`;
+    const disabledButton = isDeleting ? `disabled` : ``;
     return (
       `<li class="film-details__comment">
       <span class="film-details__comment-emoji">
@@ -52,7 +54,7 @@ const createCommentsTemplate = (comments) => {
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${convertedDate}</span>
-          <button class="film-details__comment-delete" data-id="${id}">Delete</button>
+          <button class="film-details__comment-delete" data-id="${id}" ${disabledButton}>${textButton}</button>
         </p>
       </div>
     </li>`
@@ -62,17 +64,17 @@ const createCommentsTemplate = (comments) => {
 };
 
 const createCommentsWrapTemplate = (comments) => {
-  const {description, emoji, isEmoji} = comments;
+  const {description, emoji, isEmoji, isSaving, isDeleting} = comments;
   const emojiTemplate = isEmoji ? `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">` : ``;
   const numberСomments = comments.comment.length;
   const textareaDisabledFlag = isEmoji ? `` : `disabled`;
-
+  const savingFlag = isSaving ? `` : `disabled`;
   return (`
   <section class="film-details__comments-wrap">
     <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${numberСomments}</span></h3>
   
     <ul class="film-details__comments-list">
-      ${createCommentsTemplate(comments.comment)}
+      ${createCommentsTemplate(comments.comment, isDeleting)}
     </ul>
   
     <div class="film-details__new-comment">
@@ -81,7 +83,7 @@ const createCommentsWrapTemplate = (comments) => {
       </div>
   
       <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${textareaDisabledFlag}>${he.encode(description)}</textarea>
+        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${savingFlag} ${textareaDisabledFlag}>${he.encode(description)}</textarea>
       </label>
   
       <div class="film-details__emoji-list">
@@ -317,6 +319,8 @@ export default class Popup extends SmartView {
         comments,
         {
           isEmoji: comments.emoji !== null,
+          isSaving: false,
+          isDeleting: false,
         }
     );
   }
