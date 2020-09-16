@@ -4,7 +4,7 @@ import NoFilmView from "../view/no-film.js";
 import SortView from "../view/sort.js";
 import LoadingView from "../view/loading.js";
 import ShowMoreButtonView from "../view/show-more-button.js";
-import FilmPresenter from "./film.js";
+import FilmPresenter, {State as FilmPresenterViewState} from "./film.js";
 import {filter} from "../utils/filter.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
 import {sortFilmDate, sortFilmRating} from "../utils/film.js";

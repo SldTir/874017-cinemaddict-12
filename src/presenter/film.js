@@ -7,6 +7,12 @@ const Mode = {
   DEFAULT: `DEFAULT`,
   EDITING: `EDITING`,
 };
+
+export const State = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`,
+};
+
 const siteFooterElement = document.querySelector(`.footer`);
 
 export default class Film {
@@ -72,6 +78,23 @@ export default class Film {
     remove(prevFilmComponent);
     remove(prevPopupComponent);
   }
+
+  // setViewState(state) {
+  //   switch (state) {
+  //     case State.SAVING:
+  //       this._popupComponent.updateData({
+  //         isSaving: true
+  //       });
+  //       break;
+  //     case State.DELETING:
+  //       debugger;
+
+  //       this._popupComponent.updateData({
+  //         isDeleting: true
+  //       }, data);
+  //       break;
+  //   }
+  // }
 
   destroy() {
     remove(this._filmComponent);

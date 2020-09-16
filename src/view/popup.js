@@ -38,9 +38,9 @@ const createFilmDetailsControlsTemplate = (watchlist, history, favorites) => {
     `);
 };
 
-const createCommentsTemplate = (comments, isDeleting) => {
+const createCommentsTemplate = (comments) => {
   const commentsTemplate = comments.map((element) => {
-    const {id, emotion, date, author, comment} = element;
+    const {id, emotion, date, author, comment, isDeleting} = element;
     const convertedDate = convertsDate(date);
     const textButton = isDeleting ? `Deleting...` : `Delete`;
     const disabledButton = isDeleting ? `disabled` : ``;
@@ -64,17 +64,17 @@ const createCommentsTemplate = (comments, isDeleting) => {
 };
 
 const createCommentsWrapTemplate = (comments) => {
-  const {description, emoji, isEmoji, isSaving, isDeleting} = comments;
+  const {description, emoji, isEmoji} = comments;
   const emojiTemplate = isEmoji ? `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">` : ``;
   const numberСomments = comments.comment.length;
   const textareaDisabledFlag = isEmoji ? `` : `disabled`;
-  const savingFlag = isSaving ? `` : `disabled`;
+
   return (`
   <section class="film-details__comments-wrap">
     <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${numberСomments}</span></h3>
   
     <ul class="film-details__comments-list">
-      ${createCommentsTemplate(comments.comment, isDeleting)}
+      ${createCommentsTemplate(comments.comment)}
     </ul>
   
     <div class="film-details__new-comment">
@@ -83,7 +83,7 @@ const createCommentsWrapTemplate = (comments) => {
       </div>
   
       <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${savingFlag} ${textareaDisabledFlag}>${he.encode(description)}</textarea>
+        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${textareaDisabledFlag}>${he.encode(description)}</textarea>
       </label>
   
       <div class="film-details__emoji-list">
@@ -198,7 +198,6 @@ export default class Popup extends SmartView {
     this._film = film;
     this._comments = comments;
     this._data = Popup.parseCommentsToData(this._comments);
-
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._watchlistCickHandler = this._watchlistCickHandler.bind(this);
     this._watchedCickHandler = this._watchedCickHandler.bind(this);
@@ -276,6 +275,7 @@ export default class Popup extends SmartView {
       const emotion = newCommentContainer.querySelector(`.film-details__add-emoji-label`).getAttribute(`data-emoji`);
       const dueDate = new Date().toISOString();
       const message = textarea.value ? textarea.value : textarea.getAttribute(`placeholder`);
+      textarea.setAttribute(`disabled`, ``);
       this._callback.ctrlEnterKeydown({
         emotion,
         dueDate,
@@ -303,7 +303,10 @@ export default class Popup extends SmartView {
 
   _commentDeleteHandler(evt) {
     evt.preventDefault();
-    const idComment = evt.target.getAttribute(`data-id`);
+    const target = evt.target;
+    const idComment = target.getAttribute(`data-id`);
+    target.setAttribute(`disabled`, ``);
+    target.textContent = `Deleting...`;
     this._callback.deleteClick(idComment);
   }
 
@@ -319,8 +322,6 @@ export default class Popup extends SmartView {
         comments,
         {
           isEmoji: comments.emoji !== null,
-          isSaving: false,
-          isDeleting: false,
         }
     );
   }
