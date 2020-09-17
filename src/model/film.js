@@ -61,9 +61,7 @@ export default class Films extends Observer {
   }
 
   static adaptToServer(film) {
-    const addaptedFilm = Object.assign(
-        {},
-        film,
+    const addaptedFilm =
         {
           "user_details": {
             "already_watched": film.history,
@@ -87,28 +85,10 @@ export default class Films extends Observer {
             "title": film.name,
             "total_rating": film.rating,
             "writers": film.writers,
-          }
-        }
-    );
-
-    delete addaptedFilm.watchlist;
-    delete addaptedFilm.history;
-    delete addaptedFilm.favorites;
-    delete addaptedFilm.director;
-    delete addaptedFilm.writers;
-    delete addaptedFilm.actors;
-    delete addaptedFilm.country;
-    delete addaptedFilm.name;
-    delete addaptedFilm.originalName;
-    delete addaptedFilm.poster;
-    delete addaptedFilm.rating;
-    delete addaptedFilm.releaseDate;
-    delete addaptedFilm.runtime;
-    delete addaptedFilm.genre;
-    delete addaptedFilm.numberСomments;
-    delete addaptedFilm.description;
-    delete addaptedFilm.ageRatings;
-    delete addaptedFilm.watchingDate;
+          },
+          "comments": film.comments,
+          "id": film.id,
+        };
 
     return addaptedFilm;
   }

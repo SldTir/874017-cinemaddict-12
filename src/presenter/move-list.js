@@ -90,7 +90,7 @@ export default class MoveList {
       case UserAction.DELETE_COMMENT:
         this._api.deleteComment(data)
         .then(() => {
-          this._commentsModel.deleteComment(actionType, update, data);
+          this._commentsModel.deleteComment(updateType, update, data);
         })
         .catch(() => {
           this._filmPresenter[update.filmId].setViewState(actionType, data);
