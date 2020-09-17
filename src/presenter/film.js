@@ -9,8 +9,7 @@ const Mode = {
 };
 
 export const State = {
-  SAVING: `SAVING`,
-  DELETING: `DELETING`,
+  ABORTING: `ABORTING`
 };
 
 const siteFooterElement = document.querySelector(`.footer`);
@@ -35,6 +34,7 @@ export default class Film {
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._handleSubmitHandler = this._handleSubmitHandler.bind(this);
+    this._setViewState = this.setViewState.bind(this);
   }
 
   init(film, comments) {
@@ -79,22 +79,20 @@ export default class Film {
     remove(prevPopupComponent);
   }
 
-  // setViewState(state) {
-  //   switch (state) {
-  //     case State.SAVING:
-  //       this._popupComponent.updateData({
-  //         isSaving: true
-  //       });
-  //       break;
-  //     case State.DELETING:
-  //       debugger;
+  setViewState(actionType, idComment) {
+    let targetElement;
+    switch (actionType) {
+      case UserAction.DELETE_COMMENT:
+        targetElement = this._popupComponent.getCommentFormId(idComment);
+        this._popupComponent.shake(targetElement, this._popupComponent.resetComment, idComment);
+        break;
+      case UserAction.ADD_COMMENT:
+        targetElement = this._popupComponent.getSendingForm();
+        this._popupComponent.shake(targetElement, this._popupComponent.resetForm);
+        break;
+    }
 
-  //       this._popupComponent.updateData({
-  //         isDeleting: true
-  //       }, data);
-  //       break;
-  //   }
-  // }
+  }
 
   destroy() {
     remove(this._filmComponent);

@@ -206,6 +206,8 @@ export default class Popup extends SmartView {
     this._addComment = this._addComment.bind(this);
     this.updateData = this.updateData.bind(this);
     this._commentDeleteHandler = this._commentDeleteHandler.bind(this);
+    this.resetComment = this.resetComment.bind(this);
+    this.resetForm = this.resetForm.bind(this);
   }
 
   reset(comments) {
@@ -314,6 +316,27 @@ export default class Popup extends SmartView {
     this._callback.deleteClick = callback;
     const deleteButton = this.getElement().querySelectorAll(`.film-details__comment-delete`);
     deleteButton.forEach((element) => element.addEventListener(`click`, this._commentDeleteHandler));
+  }
+
+  getCommentFormId(idComment) {
+    const element = this.getElement().querySelector(`button[data-id="${idComment}"]`).parentElement.parentElement.parentElement;
+    return element;
+  }
+
+  resetComment(idComment) {
+    const element = this.getElement().querySelector(`button[data-id="${idComment}"]`);
+    element.textContent = `Delete`;
+  }
+
+  getSendingForm() {
+    const newCommentContainer = this.getElement().querySelector(`.film-details__new-comment`);
+    return newCommentContainer;
+  }
+
+  resetForm() {
+    const newCommentContainer = this.getElement().querySelector(`.film-details__new-comment`);
+    const textarea = newCommentContainer.querySelector(`.film-details__comment-input`);
+    textarea.disabled = false;
   }
 
   static parseCommentsToData(comments) {
