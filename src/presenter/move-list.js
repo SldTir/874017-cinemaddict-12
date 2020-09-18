@@ -79,10 +79,22 @@ export default class MoveList {
         });
         break;
       case UserAction.ADD_COMMENT:
-        this._commentsModel.addComment(updateType, update, data);
+        this._api.addComment(data, update.filmId)
+        .then((response) => {
+          this._commentsModel.addComment(updateType, update, response);
+        })
+        .catch(() => {
+          this._filmPresenter[update.filmId].setViewState(actionType);
+        });
         break;
       case UserAction.DELETE_COMMENT:
-        this._commentsModel.deleteComment(updateType, update, data);
+        this._api.deleteComment(data)
+        .then(() => {
+          this._commentsModel.deleteComment(updateType, update, data);
+        })
+        .catch(() => {
+          this._filmPresenter[update.filmId].setViewState(actionType, data);
+        });
         break;
     }
   }
@@ -90,9 +102,8 @@ export default class MoveList {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
-        const indexFilm = this._getFilms().findIndex((film) => film.id === data.id);
-        const indexComment = this._getComments().findIndex((comment) => comment.id === data.id);
-        this._filmPresenter[data.id].init(this._getFilms()[indexFilm], this._getComments()[indexComment]);
+        const indexFilm = this._getFilms().findIndex((film) => film.id === data.filmId);
+        this._filmPresenter[data.filmId].init(this._getFilms()[indexFilm], data);
         break;
       case UpdateType.MINOR:
         this._clearBoard();

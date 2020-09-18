@@ -18,25 +18,23 @@ export default class Comments extends Observer {
   }
 
   addComment(updateType, update, data) {
-    const index = this._comments.findIndex((comment) => comment.id === update.id);
+    const index = this._comments.findIndex((comment) => comment.filmId === data.comment.movie.id);
     const commentsTarget = this._comments[index];
-    commentsTarget.comments.push(data);
-
+    commentsTarget.comment = [];
+    data.comment.comments.forEach((element) => commentsTarget.comment.push(element));
     this._notify(updateType, update);
   }
 
-  deleteComment(updateType, update, id) {
-    const numberId = Number(id);
-    const index = this._comments.findIndex((comment) => comment.id === update.id);
-    const commentsTarget = this._comments[index];
-    const commentsDelitingIndex = commentsTarget.comments.findIndex((comment) => comment.id === numberId);
+  deleteComment(updateType, update, commentId) {
+    const index = this._comments.findIndex((comment) => comment.filmId === update.filmId);
+    const commentsTarget = this._comments[index].comment;
+    const commentsDelitingIndex = commentsTarget.findIndex((comment) => comment.id === commentId);
 
     if (index === -1) {
       throw new Error(`Can't delete unexisting comment`);
     }
 
-    this._comments[index].comments.splice(commentsDelitingIndex, 1);
-
+    this._comments[index].comment.splice(commentsDelitingIndex, 1);
     this._notify(updateType, update);
   }
 
@@ -47,6 +45,20 @@ export default class Comments extends Observer {
       emoji: null,
       filmId,
       url: ``,
+    };
+  }
+
+  static adaptNewComment(comment) {
+    return {
+      comment
+    };
+  }
+
+  static adaptToServer(comment) {
+    return {
+      "comment": comment.message,
+      "date": comment.dueDate,
+      "emotion": comment.emotion,
     };
   }
 }

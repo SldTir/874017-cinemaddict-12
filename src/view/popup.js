@@ -2,7 +2,6 @@ import he from "he";
 import SmartView from "./smart.js";
 import {convertsDate, convertMillisecondsDatePopup} from "../utils/film.js";
 import {EmojiМessage} from "../const.js";
-import {generateId} from "../utils/common.js";
 
 const createGenresTemplate = (genre) => {
   const genreTemplate = genre.map((element) => {
@@ -41,8 +40,10 @@ const createFilmDetailsControlsTemplate = (watchlist, history, favorites) => {
 
 const createCommentsTemplate = (comments) => {
   const commentsTemplate = comments.map((element) => {
-    const {id, emotion, date, author, comment} = element;
+    const {id, emotion, date, author, comment, isDeleting} = element;
     const convertedDate = convertsDate(date);
+    const textButton = isDeleting ? `Deleting...` : `Delete`;
+    const disabledButton = isDeleting ? `disabled` : ``;
     return (
       `<li class="film-details__comment">
       <span class="film-details__comment-emoji">
@@ -53,7 +54,7 @@ const createCommentsTemplate = (comments) => {
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${convertedDate}</span>
-          <button class="film-details__comment-delete" data-id="${id}">Delete</button>
+          <button class="film-details__comment-delete" data-id="${id}" ${disabledButton}>${textButton}</button>
         </p>
       </div>
     </li>`
@@ -197,7 +198,6 @@ export default class Popup extends SmartView {
     this._film = film;
     this._comments = comments;
     this._data = Popup.parseCommentsToData(this._comments);
-
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._watchlistCickHandler = this._watchlistCickHandler.bind(this);
     this._watchedCickHandler = this._watchedCickHandler.bind(this);
@@ -206,6 +206,8 @@ export default class Popup extends SmartView {
     this._addComment = this._addComment.bind(this);
     this.updateData = this.updateData.bind(this);
     this._commentDeleteHandler = this._commentDeleteHandler.bind(this);
+    this.resetComment = this.resetComment.bind(this);
+    this.resetForm = this.resetForm.bind(this);
   }
 
   reset(comments) {
@@ -272,16 +274,13 @@ export default class Popup extends SmartView {
     if (evt.ctrlKey === true && evt.key === `Enter`) {
       const newCommentContainer = this.getElement().querySelector(`.film-details__new-comment`);
       const textarea = newCommentContainer.querySelector(`.film-details__comment-input`);
-      const id = generateId();
       const emotion = newCommentContainer.querySelector(`.film-details__add-emoji-label`).getAttribute(`data-emoji`);
-      const dueDate = new Date();
-      const author = `A A`;
+      const dueDate = new Date().toISOString();
       const message = textarea.value ? textarea.value : textarea.getAttribute(`placeholder`);
+      textarea.setAttribute(`disabled`, ``);
       this._callback.ctrlEnterKeydown({
-        id,
         emotion,
         dueDate,
-        author,
         message,
       });
     }
@@ -306,7 +305,10 @@ export default class Popup extends SmartView {
 
   _commentDeleteHandler(evt) {
     evt.preventDefault();
-    const idComment = evt.target.getAttribute(`data-id`);
+    const target = evt.target;
+    const idComment = target.getAttribute(`data-id`);
+    target.setAttribute(`disabled`, ``);
+    target.textContent = `Deleting...`;
     this._callback.deleteClick(idComment);
   }
 
@@ -314,6 +316,27 @@ export default class Popup extends SmartView {
     this._callback.deleteClick = callback;
     const deleteButton = this.getElement().querySelectorAll(`.film-details__comment-delete`);
     deleteButton.forEach((element) => element.addEventListener(`click`, this._commentDeleteHandler));
+  }
+
+  getCommentFormId(idComment) {
+    const element = this.getElement().querySelector(`button[data-id="${idComment}"]`).parentElement.parentElement.parentElement;
+    return element;
+  }
+
+  resetComment(idComment) {
+    const element = this.getElement().querySelector(`button[data-id="${idComment}"]`);
+    element.textContent = `Delete`;
+  }
+
+  getSendingForm() {
+    const newCommentContainer = this.getElement().querySelector(`.film-details__new-comment`);
+    return newCommentContainer;
+  }
+
+  resetForm() {
+    const newCommentContainer = this.getElement().querySelector(`.film-details__new-comment`);
+    const textarea = newCommentContainer.querySelector(`.film-details__comment-input`);
+    textarea.disabled = false;
   }
 
   static parseCommentsToData(comments) {
