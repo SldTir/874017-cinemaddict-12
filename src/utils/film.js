@@ -1,5 +1,6 @@
 import {getRandomInteger} from "./common.js";
-import {Month} from "../const.js";
+import moment from "moment";
+
 const RANGE_MIN = 0;
 
 export const generateRating = (a = 0, b = 1) => {
@@ -29,29 +30,22 @@ export const generateDate = () => {
   return new Date(currentDate);
 };
 
-export const convertsDate = (date) => {
-  const dateMs = new Date(convertDateMilliseconds(date));
-  const day = String(dateMs.getDate()).padStart(2, `0`);
-  const year = dateMs.getFullYear();
-  const month = String(dateMs.getMonth() + 1).padStart(2, `0`);
-  const minutes = String(dateMs.getMinutes()).padStart(2, `0`);
-  const second = String(dateMs.getSeconds()).padStart(2, `0`);
-  const convertedDate = `${year}/${month}/${day} ${minutes}:${second}`;
-  return convertedDate;
-};
-
 export const convertDateMilliseconds = (date) => {
   return new Date(date).getTime();
 };
 
-export const convertMillisecondsDatePopup = (dateMill) => {
-  const nedDate = new Date(dateMill);
-  const day = String(nedDate.getDate()).padStart(2, `0`);
-  const year = nedDate.getFullYear();
-  const monthNumber = nedDate.getMonth();
-  const month = Month[monthNumber];
-  const convertedDate = `${day} ${month} ${year}`;
-  return convertedDate;
+export const formatDurationMovie = (date) => {
+  const dateMinuteHour = moment.utc().startOf(`day`).add(date, `minutes`).format(`h mm`);
+  const arr = dateMinuteHour.split(` `);
+  return `${arr[0]}h ${arr[1]}m`;
+};
+
+export const formatDateComment = (date) => {
+  return moment(date).format(`YYYY/MM/DD HH:mm`);
+};
+
+export const formatReleaseDate = (date) => {
+  return moment(date).format(`DD MMMM YYYY`);
 };
 
 const getWeightForNullValue = (valueA, valueB) => {
