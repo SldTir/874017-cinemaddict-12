@@ -4,7 +4,8 @@ import FilmsModel from "./model/film.js";
 import CommentsModel from "./model/comments.js";
 import FilterPresenter from "./presenter/filter.js";
 import FilterModel from "./model/filter.js";
-import {UpdateType} from "./const.js";
+import StatsView from "./view/stats.js";
+import {UpdateType, MenuItem} from "./const.js";
 import {render, RenderPosition} from "./utils/render.js";
 import Api from "./api.js";
 
@@ -16,13 +17,24 @@ const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
 
 const api = new Api(END_POINT, AUTHORIZATION);
 
+const handleSiteMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.MOVIE_LIST:
+      break;
+    case MenuItem.STATISTICS:
+      break;
+  }
+};
+
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel();
 
 const filterModel = new FilterModel();
 
+const statsComponent = new StatsView();
+
 const moveListPresenter = new MoveListPresenter(siteMainElement, filmsModel, commentsModel, filterModel, api);
-const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel);
+const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel, handleSiteMenuClick);
 
 render(siteHeaderElement, new UserMenuView(), RenderPosition.BEFOREEND);
 filterPresenter.init();
@@ -49,4 +61,5 @@ api.getFilms()
     filmsModel.setFilms(UpdateType.INIT, []);
   });
 
+render(siteMainElement, statsComponent.getElement(), RenderPosition.BEFOREEND);
 

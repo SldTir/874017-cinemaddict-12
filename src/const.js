@@ -30,3 +30,8 @@ export const FilterType = {
   HISTORY: `History`,
   FAVORITES: `Favorites`,
 };
+
+export const MenuItem = {
+  MOVIE_LIST: `MOVIE_LIST`,
+  STATISTICS: `STATISTICS`,
+};
