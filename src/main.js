@@ -17,15 +17,6 @@ const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
 
 const api = new Api(END_POINT, AUTHORIZATION);
 
-const handleSiteMenuClick = (menuItem) => {
-  switch (menuItem) {
-    case MenuItem.MOVIE_LIST:
-      break;
-    case MenuItem.STATISTICS:
-      break;
-  }
-};
-
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel();
 
@@ -34,12 +25,24 @@ const filterModel = new FilterModel();
 const statsComponent = new StatsView();
 
 const moveListPresenter = new MoveListPresenter(siteMainElement, filmsModel, commentsModel, filterModel, api);
+
+const handleSiteMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.MOVIE_LIST:
+      moveListPresenter.init();
+      break;
+    case MenuItem.STATISTICS:
+      moveListPresenter.destroy();
+      break;
+  }
+};
+
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel, handleSiteMenuClick);
 
 render(siteHeaderElement, new UserMenuView(), RenderPosition.BEFOREEND);
 filterPresenter.init();
-
 moveListPresenter.init();
+
 
 const getCommentsApi = (updateType) => {
   const films = filmsModel.getFilms();
@@ -62,4 +65,5 @@ api.getFilms()
   });
 
 render(siteMainElement, statsComponent.getElement(), RenderPosition.BEFOREEND);
+
 

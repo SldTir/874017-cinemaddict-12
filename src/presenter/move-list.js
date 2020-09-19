@@ -37,15 +37,27 @@ export default class MoveList {
     this._handleModelChange = this._handleModelChange.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-
-    this._filmsModel.addObserver(this._handleModelEvent);
-    this._commentsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
+
+    this._filmsModel.addObserver(this._handleModelEvent);
+    this._commentsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
     this._renderBoard();
+  }
+
+  destroy() {
+    this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
+
+    remove(this._filmListComponent);
+    remove(this._boardContainer);
+
+    this._filmsModel.removeObserver(this._handleModelEvent);
+    this._commentsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
   }
 
   _getFilms() {
@@ -110,7 +122,7 @@ export default class MoveList {
         this._renderBoard();
         break;
       case UpdateType.MAJOR:
-        this._clearBoard({resetRenderedTaskCount: true, resetSortType: true});
+        this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
         this._renderBoard();
         break;
       case UpdateType.INIT:
@@ -127,7 +139,7 @@ export default class MoveList {
     }
 
     this._currentSortType = sortType;
-    this._clearBoard({resetRenderedTaskCount: true});
+    this._clearBoard({resetRenderedFilmCount: true});
     this._renderBoard();
   }
 
@@ -193,7 +205,7 @@ export default class MoveList {
     render(this._boardComponent, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
   }
 
-  _clearBoard({resetRenderedTaskCount = false, resetSortType = false} = {}) {
+  _clearBoard({resetRenderedFilmCount = false, resetSortType = false} = {}) {
     const filmCount = this._getFilms().length;
 
     Object
@@ -206,7 +218,7 @@ export default class MoveList {
     remove(this._loadingComponent);
     remove(this._showMoreButtonComponent);
 
-    if (resetRenderedTaskCount) {
+    if (resetRenderedFilmCount) {
       this._renderedFilmCount = FILM_COUNT_PER_STEP;
     } else {
       this._renderedFilmCount = Math.min(filmCount, this._renderedFilmCount);
