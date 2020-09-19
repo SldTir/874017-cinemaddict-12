@@ -1,5 +1,8 @@
 import SmartView from "./smart.js";
+import Chart from "chart.js";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {formatDurationMovieStats, getCurrentDate} from "../utils/film.js";
+import {countCompletedFilmInDateRange} from "../utils/statistics.js";
 
 const calculatesRank = (moviesViewed) => {
   let rank;
@@ -43,7 +46,12 @@ const findsFrequentGenre = (films) => {
   return recordItem;
 };
 
-const createStatsTemplate = (films) => {
+const renderGenreChart = (statisticCtx, film) => {
+  // Функция для отрисовки графика по цветам
+};
+
+const createStatsTemplate = (data) => {
+  const {films, dateFrom, dateTo} = data; 
   const filmsClone = films.slice();
   const filmsCloneFilter = filmsClone.filter((film) => film.history === true);
   const moviesViewedLength = filmsCloneFilter.length;
@@ -52,6 +60,9 @@ const createStatsTemplate = (films) => {
   const elapsedHour = moviesViewedLength ? elapsedTime[0] : `0`;
   const elapseMinute = moviesViewedLength ? elapsedTime[1] : `0`;
   const rankTemplate = moviesViewedLength ? createRankTemplate(moviesViewedLength) : ``;
+
+  const completedTaskCount = countCompletedFilmInDateRange(films, dateFrom, dateTo);
+  debugger;
 
   return (`<section class="statistic">
   ${rankTemplate}
@@ -99,7 +110,6 @@ const createStatsTemplate = (films) => {
 export default class Stats extends SmartView {
   constructor(films) {
     super();
-    this._films = films;
     this._data = {
       films,
       dateFrom: (() => {
@@ -110,14 +120,19 @@ export default class Stats extends SmartView {
       })(),
       dateTo: getCurrentDate()
     }
+
+    this._genresChart = null;
   }
 
   removeElement() {
     super.removeElement();
+    if (this._genresChart !== null) {
+      this._genresChart = null;
+    }
   }
 
   getTemplate() {
-    return createStatsTemplate(this._films);
+    return createStatsTemplate(this._data);
   }
 
   restoreHandlers() {
@@ -136,6 +151,16 @@ export default class Stats extends SmartView {
   }
 
   _setCharts() {
-    //Отрисовка графиков.
+    if (this._genresChart !== null) {
+      this._genresChart = null;
+    }
+
+    const {films, dateFrom, dateTo} = this._data;
+    const BAR_HEIGHT = 50;
+    const statisticCtx = document.querySelector(`.statistic__chart`);
+    
+    statisticCtx.height = BAR_HEIGHT * 5;
+
+    this._genresChart = renderGenresChart(statisticCtx, films);
   }
 }
