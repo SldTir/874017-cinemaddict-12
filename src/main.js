@@ -22,7 +22,6 @@ const commentsModel = new CommentsModel();
 
 const filterModel = new FilterModel();
 
-const statsComponent = new StatsView();
 
 const moveListPresenter = new MoveListPresenter(siteMainElement, filmsModel, commentsModel, filterModel, api);
 
@@ -59,11 +58,9 @@ api.getFilms()
     filmsModel.setFilms(films);
     filterPresenter.init();
     getCommentsApi(UpdateType.INIT);
+    render(siteMainElement, new StatsView(filmsModel.getFilms()), RenderPosition.BEFOREEND);
   })
   .catch(() => {
     filmsModel.setFilms(UpdateType.INIT, []);
   });
-
-render(siteMainElement, statsComponent.getElement(), RenderPosition.BEFOREEND);
-
 

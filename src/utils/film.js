@@ -3,6 +3,13 @@ import moment from "moment";
 
 const RANGE_MIN = 0;
 
+export const getCurrentDate = () => {
+  const currentDate = new Date();
+  currentDate.setHours(23, 59, 59, 999);
+
+  return new Date(currentDate);
+};
+
 export const generateRating = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -39,6 +46,13 @@ export const formatDurationMovie = (date) => {
   const arr = dateMinuteHour.split(` `);
   return `${arr[0]}h ${arr[1]}m`;
 };
+
+export const formatDurationMovieStats = (date) => {
+  const hour = Math.trunc(date / 60);
+  const minutes = date - hour * 60;
+  return `${hour} ${minutes}`;
+};
+
 
 export const formatDateComment = (date) => {
   return moment(date).format(`YYYY/MM/DD HH:mm`);

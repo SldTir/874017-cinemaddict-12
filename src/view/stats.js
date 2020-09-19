@@ -1,13 +1,60 @@
-import AbstractView from "./abstract.js";
+import SmartView from "./smart.js";
+import {formatDurationMovieStats, getCurrentDate} from "../utils/film.js";
 
-const createStatsTemplate = () => {
-  return (`<section class="statistic">
-  <p class="statistic__rank">
+const calculatesRank = (moviesViewed) => {
+  let rank;
+  if (moviesViewed > 0 && moviesViewed <= 10) {
+    rank = `novice`;
+  } if (moviesViewed >= 11 && moviesViewed <= 20) {
+    rank = `fan`;
+  } if (moviesViewed >= 21) {
+    rank = `movie buff`;
+  }
+
+  return rank;
+};
+
+const createRankTemplate = (moviesViewed) => {
+  return (`<p class="statistic__rank">
     Your rank
     <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-    <span class="statistic__rank-label">Sci-Fighter</span>
-  </p>
-  
+    <span class="statistic__rank-label">${calculatesRank(moviesViewed)}</span>
+  </p>`);
+};
+
+const countsViewingTime = (moviesViewed) => {
+  let elapsedTime = 0;
+  moviesViewed.forEach((film) => {
+    elapsedTime += film.runtime;
+  });
+  return elapsedTime;
+};
+
+const findsFrequentGenre = (films) => {
+  const genres = films.map((film) => film.genre);
+  const genresAll = [].concat.apply([], genres);
+
+  const reps = genresAll.reduce((accum, item) => {
+  const newCount = (accum[item] || 0) + 1;
+    return {...accum, [item]: newCount};
+  }, {});
+  const max = Math.max.apply(null, Object.values(reps));
+  const [recordItem] = Object.entries(reps).find(([, val]) => val === max);
+  return recordItem;
+};
+
+const createStatsTemplate = (films) => {
+  const filmsClone = films.slice();
+  const filmsCloneFilter = filmsClone.filter((film) => film.history === true);
+  const moviesViewedLength = filmsCloneFilter.length;
+  const frequentGenre = moviesViewedLength ? findsFrequentGenre(filmsCloneFilter) : ``;
+  const elapsedTime = formatDurationMovieStats(countsViewingTime(filmsCloneFilter)).split(` `);
+  const elapsedHour = moviesViewedLength ? elapsedTime[0] : `0`;
+  const elapseMinute = moviesViewedLength ? elapsedTime[1] : `0`;
+  const rankTemplate = moviesViewedLength ? createRankTemplate(moviesViewedLength) : ``;
+
+  return (`<section class="statistic">
+  ${rankTemplate}
   <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
     <p class="statistic__filters-description">Show stats:</p>
   
@@ -30,15 +77,15 @@ const createStatsTemplate = () => {
   <ul class="statistic__text-list">
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">You watched</h4>
-      <p class="statistic__item-text">22 <span class="statistic__item-description">movies</span></p>
+      <p class="statistic__item-text">${moviesViewedLength} <span class="statistic__item-description">movies</span></p>
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Total duration</h4>
-      <p class="statistic__item-text">130 <span class="statistic__item-description">h</span> 22 <span class="statistic__item-description">m</span></p>
+      <p class="statistic__item-text">${elapsedHour}<span class="statistic__item-description">h</span> ${elapseMinute} <span class="statistic__item-description">m</span></p>
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Top genre</h4>
-      <p class="statistic__item-text">Sci-Fi</p>
+      <p class="statistic__item-text">${frequentGenre}</p>
     </li>
   </ul>
   
@@ -49,12 +96,46 @@ const createStatsTemplate = () => {
   </section>`);
 };
 
-export default class Stats extends AbstractView {
-  constructor() {
+export default class Stats extends SmartView {
+  constructor(films) {
     super();
+    this._films = films;
+    this._data = {
+      films,
+      dateFrom: (() => {
+        const daysToFullWeek = 6;
+        const date = getCurrentDate();
+        date.setDate(date.getDate() - daysToFullWeek);
+        return date;
+      })(),
+      dateTo: getCurrentDate()
+    }
+  }
+
+  removeElement() {
+    super.removeElement();
   }
 
   getTemplate() {
-    return createStatsTemplate();
+    return createStatsTemplate(this._films);
+  }
+
+  restoreHandlers() {
+    //Переустановка обработчиков.
+  }
+
+  _dateChangeHandler([dateFrom, dateTo]) {
+    if (!dateFrom || !dateTo) {
+      return;
+    }
+
+    this.updateData({
+      dateFrom,
+      dateTo
+    });
+  }
+
+  _setCharts() {
+    //Отрисовка графиков.
   }
 }
