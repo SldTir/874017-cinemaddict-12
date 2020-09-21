@@ -5,12 +5,14 @@ import CommentsModel from "./model/comments.js";
 import FilterPresenter from "./presenter/filter.js";
 import FilterModel from "./model/filter.js";
 import StatsView from "./view/stats.js";
+import FooterStatView from "./view/footer-statistics.js";
 import {UpdateType, MenuItem} from "./const.js";
-import {render, RenderPosition} from "./utils/render.js";
+import {render, RenderPosition, remove} from "./utils/render.js";
 import Api from "./api.js";
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
+const footerStatElement = document.querySelector(`.footer__statistics`);
 
 const AUTHORIZATION = `Basic er883jdzbdw`;
 const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
@@ -25,20 +27,24 @@ const filterModel = new FilterModel();
 
 const moveListPresenter = new MoveListPresenter(siteMainElement, filmsModel, commentsModel, filterModel, api);
 
+let statisticsComponent = null;
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.MOVIE_LIST:
+      moveListPresenter.destroy();
       moveListPresenter.init();
+      remove(statisticsComponent);
       break;
     case MenuItem.STATISTICS:
       moveListPresenter.destroy();
+      remove(statisticsComponent);
+      statisticsComponent = new StatsView(filmsModel.getFilms());
+      render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
       break;
   }
 };
 
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel, handleSiteMenuClick);
-
-render(siteHeaderElement, new UserMenuView(), RenderPosition.BEFOREEND);
 filterPresenter.init();
 moveListPresenter.init();
 
@@ -58,7 +64,8 @@ api.getFilms()
     filmsModel.setFilms(films);
     filterPresenter.init();
     getCommentsApi(UpdateType.INIT);
-    render(siteMainElement, new StatsView(filmsModel.getFilms()), RenderPosition.BEFOREEND);
+    render(siteHeaderElement, new UserMenuView(filmsModel.getFilms()), RenderPosition.BEFOREEND);
+    render(footerStatElement, new FooterStatView(filmsModel.getFilms()), RenderPosition.BEFOREEND);
   })
   .catch(() => {
     filmsModel.setFilms(UpdateType.INIT, []);

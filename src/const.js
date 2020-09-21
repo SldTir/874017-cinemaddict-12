@@ -35,3 +35,11 @@ export const MenuItem = {
   MOVIE_LIST: `MOVIE_LIST`,
   STATISTICS: `STATISTICS`,
 };
+
+export const StatsItem = {
+  all: new Date(0),
+  today: 1,
+  week: 6,
+  month: 31,
+  year: 365,
+};

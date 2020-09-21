@@ -53,7 +53,7 @@ export default class MoveList {
     this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
 
     remove(this._filmListComponent);
-    remove(this._boardContainer);
+    remove(this._boardComponent);
 
     this._filmsModel.removeObserver(this._handleModelEvent);
     this._commentsModel.removeObserver(this._handleModelEvent);
