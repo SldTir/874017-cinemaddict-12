@@ -43,3 +43,25 @@ export const StatsItem = {
   month: 31,
   year: 365,
 };
+
+export const RankItem = {
+  NOVICE: `novice`,
+  FAN: `fan`,
+  MOVIE_BUFF: `movie buff`,
+};
+
+export const InputLabelItem = {
+  ALL_TIME: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`,
+};
+
+export const LabelTextContent = {
+  all: `All time`,
+  today: `Today`,
+  week: `Week`,
+  month: `Month`,
+  year: `Year`,
+};

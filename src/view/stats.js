@@ -3,7 +3,10 @@ import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {formatDurationMovieStats, getCurrentDate} from "../utils/film.js";
 import {countCompletedFilmInDateRange, makeItemsUniq, countFilmsGenreRating, findsFrequentGenre, getLatestDate, calculatesRank} from "../utils/statistics.js";
-import {StatsItem} from "../const.js";
+import {StatsItem, InputLabelItem, LabelTextContent} from "../const.js";
+
+const BAR_HEIGHT = 50;
+
 
 const createRankTemplate = (moviesViewed) => {
   return (`<p class="statistic__rank">
@@ -24,7 +27,7 @@ const countsViewingTime = (moviesViewed) => {
 const renderGenreChart = (statisticCtx, films, uniqItems) => {
 
   const data = countFilmsGenreRating(films, uniqItems);
-  const myChart = new Chart(statisticCtx, {
+  return new Chart(statisticCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
@@ -80,12 +83,22 @@ const renderGenreChart = (statisticCtx, films, uniqItems) => {
       }
     }
   });
+};
 
-  return myChart;
+const createInputLabelTemplate = (inputLabelArray, filterChecked) => {
+  const valueInput = Object.values(inputLabelArray);
+  const inputLabelTemplate = valueInput.map((element) => {
+    const textContentUp = element.split(`-`)[0];
+    const textLabel = LabelTextContent[textContentUp];
+    return (`<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${element}" value="${element}" ${element === filterChecked ? `checked` : ``}>
+    <label for="statistic-${element}" class="statistic__filters-label">${textLabel}</label>`);
+  }).join(`\n`);
+  return inputLabelTemplate;
 };
 
 const createStatsTemplate = (data) => {
   const {films, dateFrom, dateTo, filterChecked} = data;
+
   const filteredFilm = countCompletedFilmInDateRange(films, dateFrom, dateTo);
 
   const filmsFilteredHistoryClone = filteredFilm.slice().filter((film) => film.history);
@@ -97,26 +110,13 @@ const createStatsTemplate = (data) => {
   const elapsedHour = moviesViewedLength ? elapsedTime[0] : `0`;
   const elapseMinute = moviesViewedLength ? elapsedTime[1] : `0`;
   const rankTemplate = filmsHistoryClone.length ? createRankTemplate(filmsHistoryClone.length) : ``;
+  const inputLabelTemplate = createInputLabelTemplate(InputLabelItem, filterChecked);
 
   return (`<section class="statistic">
   ${rankTemplate}
   <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
     <p class="statistic__filters-description">Show stats:</p>
-  
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" ${`all` === filterChecked ? `checked` : ``}>
-    <label for="statistic-all-time" class="statistic__filters-label">All time</label>
-  
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today" ${`today` === filterChecked ? `checked` : ``}>
-    <label for="statistic-today" class="statistic__filters-label">Today</label>
-  
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week" ${`week` === filterChecked ? `checked` : ``}>
-    <label for="statistic-week" class="statistic__filters-label">Week</label>
-  
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month" ${`month` === filterChecked ? `checked` : ``}>
-    <label for="statistic-month" class="statistic__filters-label">Month</label>
-  
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year" ${`year` === filterChecked ? `checked` : ``}>
-    <label for="statistic-year" class="statistic__filters-label">Year</label>
+    ${inputLabelTemplate}
   </form>
   
   <ul class="statistic__text-list">
@@ -148,7 +148,7 @@ export default class Stats extends SmartView {
       films,
       dateFrom: new Date(0),
       dateTo: getCurrentDate(),
-      filterChecked: `all`,
+      filterChecked: InputLabelItem.ALL_TIME,
     };
 
     this._dateChangeHandler = this._dateChangeHandler.bind(this);
@@ -197,19 +197,17 @@ export default class Stats extends SmartView {
     const filmsHistoryClone = filteredFilm.slice().filter((film) => film.history);
     const uniqItems = makeItemsUniq(filmsHistoryClone);
 
-    const BAR_HEIGHT = 50;
-
     const statisticCtx = this.getElement().querySelector(`.statistic__chart`);
-
     statisticCtx.height = BAR_HEIGHT * uniqItems.size;
     this._genresChart = renderGenreChart(statisticCtx, filmsHistoryClone, uniqItems);
   }
 
   statsFilterCLickHandler(evt) {
     evt.preventDefault();
-    const targetInput = evt.target.getAttribute(`for`).split(`-`)[1];
-    const latestDate = getLatestDate(StatsItem[targetInput]);
-    this._dateChangeHandler(latestDate, targetInput);
+    const targetInput = evt.target.getAttribute(`for`);
+    const inputValue = this.getElement().querySelector(`#${targetInput}`).value;
+    const latestDate = getLatestDate(StatsItem[inputValue.split(`-`)[0]]);
+    this._dateChangeHandler(latestDate, inputValue);
   }
 
   getStatFilterLabel() {

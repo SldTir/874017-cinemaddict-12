@@ -1,30 +1,21 @@
+import {RankItem} from "../const.js";
+import {getCurrentDate} from "../utils/film.js";
+
 export const calculatesRank = (moviesViewed) => {
-  let rank;
-  if (moviesViewed > 0 && moviesViewed <= 10) {
-    rank = `novice`;
-  } if (moviesViewed >= 11 && moviesViewed <= 20) {
-    rank = `fan`;
+  if (moviesViewed >= 11 && moviesViewed <= 20) {
+    return RankItem.FAN;
   } if (moviesViewed >= 21) {
-    rank = `movie buff`;
+    return RankItem.MOVIE_BUFF;
   }
-
-  return rank;
-};
-
-export const getCurrentDate = () => {
-  const currentDate = new Date();
-  currentDate.setHours(23, 59, 59, 999);
-
-  return new Date(currentDate);
+  return RankItem.NOVICE;
 };
 
 export const getLatestDate = (countDay) => {
   if (countDay instanceof Date) {
     return countDay;
   }
-  const daysToFullWeek = countDay;
   const date = getCurrentDate();
-  date.setDate(date.getDate() - daysToFullWeek);
+  date.setDate(date.getDate() - countDay);
   return date;
 };
 
@@ -47,8 +38,7 @@ const getAllGenres = (items) => {
 
 export const makeItemsUniq = (items) => {
   const allGenres = getAllGenres(items);
-  const genresUniq = new Set(allGenres);
-  return genresUniq;
+  return new Set(allGenres);
 };
 
 export const countFilmsGenreRating = (films, uniqItems) => {
