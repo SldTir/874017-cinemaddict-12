@@ -1,4 +1,5 @@
 import AbstractView from "./abstract.js";
+import {MenuItem} from "../const.js";
 
 const createFilterItemTemplate = (filter, currentFilterType) => {
   const {type, name, count} = filter;
@@ -6,7 +7,7 @@ const createFilterItemTemplate = (filter, currentFilterType) => {
   const filterContent = type === `All movies` ? type : `${type} <span class="main-navigation__item-count">${count}</span>`;
 
   return (
-    `<a href="${name}" class="main-navigation__item ${activeFilter}" data-filter-name="${type}">${filterContent}</a>`
+    `<a href="${name}" class="main-navigation__item ${activeFilter}" data-menu-item="${MenuItem.MOVIE_LIST}" data-filter-name="${type}">${filterContent}</a>`
   );
 };
 
@@ -17,7 +18,7 @@ const createSiteFilterTemplate = (filterItems, currentFilterType) => {
      <div class="main-navigation__items">
        ${filterItemsTemplate}
      </div>
-     <a href="#stats" class="main-navigation__additional">Stats</a>
+     <a href="#stats" class="main-navigation__additional" data-menu-item="${MenuItem.STATISTICS}">Stats</a>
    </nav>`
   );
 };
@@ -30,6 +31,7 @@ export default class FilterView extends AbstractView {
     this._currentFilter = currentFilterType;
 
     this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
+    this._navigatioonChangeHandler = this._navigatioonChangeHandler.bind(this);
   }
 
   getTemplate() {
@@ -45,5 +47,17 @@ export default class FilterView extends AbstractView {
     this._callback.filterTypeChange = callback;
     const navigationItem = this.getElement().querySelectorAll(`.main-navigation__item`);
     navigationItem.forEach((item) => item.addEventListener(`click`, this._filterTypeChangeHandler));
+  }
+
+  _navigatioonChangeHandler(evt) {
+    evt.preventDefault();
+    const menuItem = evt.target.getAttribute(`data-menu-item`);
+    this._callback.navigationTypeChange(menuItem);
+  }
+
+  setNavigationChangeHandler(callback) {
+    this._callback.navigationTypeChange = callback;
+    const navigationItem = this.getElement();
+    navigationItem.addEventListener(`click`, this._navigatioonChangeHandler);
   }
 }

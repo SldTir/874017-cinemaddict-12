@@ -30,3 +30,38 @@ export const FilterType = {
   HISTORY: `History`,
   FAVORITES: `Favorites`,
 };
+
+export const MenuItem = {
+  MOVIE_LIST: `MOVIE_LIST`,
+  STATISTICS: `STATISTICS`,
+};
+
+export const StatsItem = {
+  all: new Date(0),
+  today: 1,
+  week: 6,
+  month: 31,
+  year: 365,
+};
+
+export const RankItem = {
+  NOVICE: `novice`,
+  FAN: `fan`,
+  MOVIE_BUFF: `movie buff`,
+};
+
+export const StatisticFilterType = {
+  ALL_TIME: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`,
+};
+
+export const LabelTextContent = {
+  all: `All time`,
+  today: `Today`,
+  week: `Week`,
+  month: `Month`,
+  year: `Year`,
+};

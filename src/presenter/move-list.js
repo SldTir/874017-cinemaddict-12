@@ -1,3 +1,4 @@
+import UserMenuView from "../view/user-menu.js";
 import BoardView from "../view/board.js";
 import FilmList from "../view/film-list.js";
 import NoFilmView from "../view/no-film.js";
@@ -24,6 +25,7 @@ export default class MoveList {
     this._isLoading = true;
     this._api = api;
 
+    this._userMenuViewComponent = null;
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
 
@@ -37,15 +39,27 @@ export default class MoveList {
     this._handleModelChange = this._handleModelChange.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-
-    this._filmsModel.addObserver(this._handleModelEvent);
-    this._commentsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
+
+    this._filmsModel.addObserver(this._handleModelEvent);
+    this._commentsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
     this._renderBoard();
+  }
+
+  destroy() {
+    this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
+
+    remove(this._filmListComponent);
+    remove(this._boardComponent);
+
+    this._filmsModel.removeObserver(this._handleModelEvent);
+    this._commentsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
   }
 
   _getFilms() {
@@ -110,7 +124,7 @@ export default class MoveList {
         this._renderBoard();
         break;
       case UpdateType.MAJOR:
-        this._clearBoard({resetRenderedTaskCount: true, resetSortType: true});
+        this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
         this._renderBoard();
         break;
       case UpdateType.INIT:
@@ -127,7 +141,7 @@ export default class MoveList {
     }
 
     this._currentSortType = sortType;
-    this._clearBoard({resetRenderedTaskCount: true});
+    this._clearBoard({resetRenderedFilmCount: true});
     this._renderBoard();
   }
 
@@ -139,6 +153,17 @@ export default class MoveList {
     this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
     render(this._boardComponent, this._sortComponent, RenderPosition.AFTERBEGIN);
+  }
+
+  _renderUserMenu() {
+    if (this._userMenuViewComponent !== null) {
+      this._userMenuViewComponent = null;
+    }
+
+    const siteHeaderElement = document.querySelector(`.header`);
+
+    this._userMenuViewComponent = new UserMenuView(this._getFilms());
+    render(siteHeaderElement, this._userMenuViewComponent, RenderPosition.BEFOREEND);
   }
 
   _renderFilm(container, film, comment) {
@@ -193,7 +218,7 @@ export default class MoveList {
     render(this._boardComponent, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
   }
 
-  _clearBoard({resetRenderedTaskCount = false, resetSortType = false} = {}) {
+  _clearBoard({resetRenderedFilmCount = false, resetSortType = false} = {}) {
     const filmCount = this._getFilms().length;
 
     Object
@@ -205,8 +230,9 @@ export default class MoveList {
     remove(this._noFilmComponent);
     remove(this._loadingComponent);
     remove(this._showMoreButtonComponent);
+    remove(this._userMenuViewComponent);
 
-    if (resetRenderedTaskCount) {
+    if (resetRenderedFilmCount) {
       this._renderedFilmCount = FILM_COUNT_PER_STEP;
     } else {
       this._renderedFilmCount = Math.min(filmCount, this._renderedFilmCount);
@@ -225,7 +251,9 @@ export default class MoveList {
 
     const films = this._getFilms();
     const filmCount = films.length;
+
     this._renderSort();
+    this._renderUserMenu();
 
     if (this._getFilms().length === 0) {
       remove(this._filmListComponent);
