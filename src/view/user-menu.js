@@ -3,7 +3,11 @@ import {calculatesRank} from "../utils/statistics.js";
 
 
 const createsUserMenu = (films) => {
-  const rank = calculatesRank(films.length);
+  const filmHistory = films.filter((film) => film.history === true);
+  const rank = calculatesRank(filmHistory.length);
+  if (filmHistory.length === 0) {
+    return ` `;
+  }
   return (
     `<section class="header__profile profile">
       <p class="profile__rating">${rank}</p>

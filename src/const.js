@@ -50,7 +50,7 @@ export const RankItem = {
   MOVIE_BUFF: `movie buff`,
 };
 
-export const InputLabelItem = {
+export const StatisticFilterType = {
   ALL_TIME: `all-time`,
   TODAY: `today`,
   WEEK: `week`,

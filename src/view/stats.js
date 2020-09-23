@@ -3,7 +3,7 @@ import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {formatDurationMovieStats, getCurrentDate} from "../utils/film.js";
 import {countCompletedFilmInDateRange, makeItemsUniq, countFilmsGenreRating, findsFrequentGenre, getLatestDate, calculatesRank} from "../utils/statistics.js";
-import {StatsItem, InputLabelItem, LabelTextContent} from "../const.js";
+import {StatsItem, StatisticFilterType, LabelTextContent} from "../const.js";
 
 const BAR_HEIGHT = 50;
 
@@ -110,7 +110,7 @@ const createStatsTemplate = (data) => {
   const elapsedHour = moviesViewedLength ? elapsedTime[0] : `0`;
   const elapseMinute = moviesViewedLength ? elapsedTime[1] : `0`;
   const rankTemplate = filmsHistoryClone.length ? createRankTemplate(filmsHistoryClone.length) : ``;
-  const inputLabelTemplate = createInputLabelTemplate(InputLabelItem, filterChecked);
+  const inputLabelTemplate = createInputLabelTemplate(StatisticFilterType, filterChecked);
 
   return (`<section class="statistic">
   ${rankTemplate}
@@ -148,7 +148,7 @@ export default class Stats extends SmartView {
       films,
       dateFrom: new Date(0),
       dateTo: getCurrentDate(),
-      filterChecked: InputLabelItem.ALL_TIME,
+      filterChecked: StatisticFilterType.ALL_TIME,
     };
 
     this._dateChangeHandler = this._dateChangeHandler.bind(this);

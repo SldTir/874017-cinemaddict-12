@@ -28,18 +28,23 @@ const filterModel = new FilterModel();
 const moveListPresenter = new MoveListPresenter(siteMainElement, filmsModel, commentsModel, filterModel, api);
 
 let statisticsComponent = null;
+let userMenuComponennt = null;
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.MOVIE_LIST:
       moveListPresenter.destroy();
       moveListPresenter.init();
       remove(statisticsComponent);
+      remove(userMenuComponennt);
       break;
     case MenuItem.STATISTICS:
       moveListPresenter.destroy();
       remove(statisticsComponent);
       statisticsComponent = new StatsView(filmsModel.getFilms());
       render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
+      remove(userMenuComponennt);
+      userMenuComponennt = new UserMenuView(filmsModel.getFilms());
+      render(siteHeaderElement, userMenuComponennt, RenderPosition.BEFOREEND);
       break;
   }
 };
@@ -64,7 +69,6 @@ api.getFilms()
     filmsModel.setFilms(films);
     filterPresenter.init();
     getCommentsApi(UpdateType.INIT);
-    render(siteHeaderElement, new UserMenuView(filmsModel.getFilms()), RenderPosition.BEFOREEND);
     render(footerStatElement, new FooterStatView(filmsModel.getFilms()), RenderPosition.BEFOREEND);
   })
   .catch(() => {
