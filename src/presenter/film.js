@@ -165,12 +165,14 @@ export default class Film {
             {},
             this._film,
             {
-              history: !this._film.history
+              history: !this._film.history,
+              watchingDate: new Date(),
             }
         ),
         this._comments
     );
   }
+
   _handleFavoriteClick() {
     this._changeData(
         UserAction.UPDATE_FILM,
