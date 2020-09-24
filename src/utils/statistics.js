@@ -43,7 +43,7 @@ export const makeItemsUniq = (items) => {
 
 export const countFilmsGenreRating = (films, uniqItems) => {
   const allGenres = getAllGenres(films);
-  let countGenres = [];
+  const countGenres = [];
   let count = 0;
   uniqItems.forEach((element) => {
     count = 0;
